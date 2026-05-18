@@ -1,0 +1,193 @@
+---
+import type { Lang } from '../data/portfolio';
+import { I18N, PROFILE } from '../data/portfolio';
+
+interface Props {
+  lang: Lang;
+  langSwitchHref: string;
+}
+
+const { lang, langSwitchHref } = Astro.props;
+const t = I18N[lang];
+const profileClass = PROFILE.className[lang];
+const guild = PROFILE.guild[lang];
+---
+<header class="header">
+  <div class="plaque">
+    <div class="plaque-inner">
+      <span class="subtitle cinzel">{t.subtitle}</span>
+      <h1 class="title cinzel">{t.title}</h1>
+      <p class="pitch fell">{t.pitch}</p>
+    </div>
+  </div>
+  <div class="sticker-wrap">
+    <a class="lang-toggle mono" href={langSwitchHref} aria-label="Switch language">{t.langToggle}</a>
+    <div class="sticker parchment-texture">
+      <span class="pin"></span>
+      <div class="sticker-grid">
+        <svg class="avatar" viewBox="0 0 62 62" width="62" height="62" aria-hidden="true">
+          <circle cx="31" cy="31" r="29" fill="var(--parchment-3)" stroke="var(--ink-1)" stroke-width="1.2" />
+          <path d="M31 14 c-10 0 -16 8 -16 16 v8 h32 v-8 c0 -8 -6 -16 -16 -16 z" fill="var(--ink-1)" />
+          <circle cx="25" cy="34" r="1.6" fill="#fbeec4" />
+          <circle cx="37" cy="34" r="1.6" fill="#fbeec4" />
+          <path d="M31 14 l4 -8 l-8 0 z" fill="var(--accent-deep)" />
+          <path d="M18 45 c4 6 22 6 26 0" fill="none" stroke="var(--ink-1)" stroke-width="1.2" />
+        </svg>
+        <div class="ident">
+          <div class="handle cinzel">{PROFILE.handle}</div>
+          <div class="role fell">{profileClass} · {lang === 'fr' ? 'Niveau' : 'Level'} {PROFILE.level}</div>
+          <div class="guild fell">{guild}</div>
+        </div>
+      </div>
+      <dl class="stats">
+        <div><dt class="mono">{t.stats.years}</dt><dd class="cinzel">{PROFILE.stats.years}</dd></div>
+        <div><dt class="mono">{t.stats.games}</dt><dd class="cinzel">{PROFILE.stats.games}</dd></div>
+        <div><dt class="mono">{t.stats.jams}</dt><dd class="cinzel">{PROFILE.stats.jams}</dd></div>
+        <div><dt class="mono">{t.stats.vr}</dt><dd class="cinzel">{PROFILE.stats.vr}</dd></div>
+      </dl>
+    </div>
+  </div>
+</header>
+
+<style>
+  .header {
+    display: flex;
+    gap: 22px;
+    align-items: stretch;
+    margin-bottom: 32px;
+  }
+  .plaque {
+    flex: 1.4;
+    padding: 11px;
+    border-radius: 12px;
+    background:
+      repeating-linear-gradient(0deg, rgba(60,30,10,0.08) 0px, transparent 1px, transparent 4px),
+      linear-gradient(180deg, #c89760 0%, #a87440 50%, #8a5c2a 100%);
+    box-shadow:
+      inset 0 0 0 3px #5a3814,
+      inset 0 0 0 5px #b78a55,
+      inset 0 0 0 7px #5a3814,
+      0 8px 18px rgba(0,0,0,.35);
+  }
+  .plaque-inner {
+    padding: 18px 28px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+  }
+  .subtitle {
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.36em;
+    color: #e6d6a4;
+  }
+  .title {
+    margin: 0;
+    font-weight: 700;
+    font-size: 46px;
+    letter-spacing: 0.06em;
+    color: #fbeec4;
+    text-shadow: 0 1px 0 #3b220c;
+    line-height: 1.05;
+  }
+  .pitch {
+    margin: 0;
+    font-style: italic;
+    font-size: 15.5px;
+    color: #f4ecd6;
+    max-width: 560px;
+  }
+
+  .sticker-wrap {
+    flex: 1;
+    position: relative;
+  }
+  .lang-toggle {
+    position: absolute;
+    top: -10px;
+    right: 0;
+    z-index: 5;
+    background: rgba(31,22,12,0.85);
+    color: #fbeec4;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    border: 1px solid var(--accent-deep);
+  }
+  .lang-toggle:hover { background: var(--accent-deep); }
+
+  .sticker {
+    position: relative;
+    padding: 18px 22px 16px;
+    transform: rotate(1.2deg);
+    background-color: var(--parchment-2);
+    box-shadow:
+      0 8px 18px rgba(0,0,0,.32),
+      inset 0 0 0 1px rgba(120,80,40,.22),
+      inset 0 0 24px rgba(120,80,40,.10);
+  }
+  .pin {
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #fff7c6 0%, var(--wax) 55%, #2a1408 100%);
+    box-shadow: 0 1px 2px rgba(0,0,0,.45);
+  }
+  .sticker-grid {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
+  .ident { flex: 1; }
+  .handle {
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--ink-1);
+  }
+  .role {
+    font-style: italic;
+    font-size: 13px;
+    color: var(--ink-2);
+  }
+  .guild {
+    font-style: italic;
+    font-size: 12px;
+    color: var(--ink-3);
+  }
+
+  .stats {
+    margin: 12px 0 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 18px;
+  }
+  .stats > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px dotted var(--ink-hair);
+    padding: 2px 0;
+    gap: 8px;
+  }
+  .stats dt {
+    margin: 0;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-3);
+  }
+  .stats dd {
+    margin: 0;
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--ink-1);
+    font-variant-numeric: tabular-nums;
+  }
+</style>

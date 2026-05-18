@@ -1,0 +1,78 @@
+---
+import type { Lang } from '../data/portfolio';
+import { GAMES, I18N } from '../data/portfolio';
+import Header from './Header.astro';
+import SectionBanner from './SectionBanner.astro';
+import QuestPoster from './QuestPoster.astro';
+import EmptyState from './EmptyState.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = I18N[lang];
+
+const base = import.meta.env.BASE_URL;
+const otherLangHref = lang === 'fr' ? `${base}en/` : base;
+
+const sections = [
+  { key: 'students',  tilt: -0.4, list: GAMES.students  },
+  { key: 'gamejams',  tilt:  0.3, list: GAMES.gamejams  },
+  { key: 'published', tilt: -0.2, list: GAMES.published },
+] as const;
+---
+<main class="board">
+  <Header lang={lang} langSwitchHref={otherLangHref} />
+
+  {sections.map((s) => (
+    <section class="section">
+      <SectionBanner
+        title={t.sections[s.key].name}
+        motto={t.sections[s.key].motto}
+        count={s.list.length}
+        tilt={s.tilt}
+      />
+      <div class="cards">
+        {s.list.length === 0 ? (
+          <EmptyState title={t.emptyTitle} body={t.emptyBody} />
+        ) : (
+          s.list.map((game, i) => (
+            <QuestPoster game={game} lang={lang} index={i} />
+          ))
+        )}
+      </div>
+    </section>
+  ))}
+
+  <footer class="page-footer fell">
+    <span>© {new Date().getFullYear()} SkyCobra · </span>
+    <a href="https://skycobra.itch.io" target="_blank" rel="noopener">skycobra.itch.io</a>
+  </footer>
+</main>
+
+<style>
+  .board {
+    width: 1280px;
+    margin: 0 auto;
+    padding: 36px 40px 60px;
+  }
+  .section {
+    margin-bottom: 32px;
+  }
+  .cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding: 18px 14px 0;
+  }
+  .page-footer {
+    margin-top: 40px;
+    padding-top: 16px;
+    text-align: center;
+    color: #f4ecd6;
+    font-style: italic;
+    opacity: 0.7;
+  }
+  .page-footer a { text-decoration: underline; text-decoration-color: rgba(244,236,214,0.4); }
+</style>

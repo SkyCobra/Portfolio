@@ -1,0 +1,11 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Portfolio from '../components/Portfolio.astro';
+import { I18N } from '../data/portfolio';
+
+const lang = 'fr' as const;
+const t = I18N[lang];
+---
+<Layout title={`${t.title} · SkyCobra`} description={t.pitch} lang={lang}>
+  <Portfolio lang={lang} />
+</Layout>

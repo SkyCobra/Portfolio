@@ -1,0 +1,55 @@
+---
+interface Props {
+  title: string;
+  motto: string;
+  count: number;
+  tilt?: number;
+}
+
+const { title, motto, count, tilt = 0 } = Astro.props;
+---
+<div class="section-banner" style={`--tilt: ${tilt}deg;`}>
+  <div class="ribbon">
+    <span class="title cinzel">{title}</span>
+    <span class="motto fell">{motto}</span>
+  </div>
+  <span class="count mono">{String(count).padStart(2, '0')}</span>
+</div>
+
+<style>
+  .section-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transform: rotate(var(--tilt));
+  }
+  .ribbon {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 8px 28px 8px 16px;
+    background: linear-gradient(180deg, var(--accent) 0%, var(--accent-deep) 100%);
+    color: #fff8e2;
+    clip-path: polygon(0 0, 100% 0, calc(100% - 14px) 50%, 100% 100%, 0 100%);
+    box-shadow: 0 4px 10px rgba(0,0,0,.28);
+  }
+  .title {
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+  .motto {
+    font-style: italic;
+    font-size: 12px;
+    opacity: 0.88;
+  }
+  .count {
+    font-size: 11px;
+    color: #fbeec4;
+    background: rgba(43,28,12,.7);
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
+</style>

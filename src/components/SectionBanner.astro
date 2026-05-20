@@ -52,4 +52,11 @@ const { title, motto, count, tilt = 0 } = Astro.props;
     padding: 4px 10px;
     border-radius: 999px;
   }
+
+  @media (max-width: 600px) {
+    .section-banner { transform: none; gap: 8px; flex-wrap: wrap; }
+    .ribbon { padding: 6px 22px 6px 12px; gap: 8px; flex-wrap: wrap; }
+    .title { font-size: 13px; letter-spacing: 0.16em; }
+    .motto { font-size: 11px; }
+  }
 </style>

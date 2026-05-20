@@ -21,7 +21,23 @@ const guild = PROFILE.guild[lang];
     </div>
   </div>
   <div class="sticker-wrap">
-    <a class="lang-toggle mono" href={langSwitchHref} aria-label="Switch language">{t.langToggle}</a>
+    <div class="top-controls">
+      <a class="ctrl" href="https://www.linkedin.com/in/romain-castel/" target="_blank" rel="noopener" aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+          <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14zM8.34 18.5V9.83H5.67v8.67h2.67zM7 8.67a1.55 1.55 0 1 0 0-3.1 1.55 1.55 0 0 0 0 3.1zm11.5 9.83v-4.75c0-2.55-1.36-3.74-3.18-3.74-1.47 0-2.13.81-2.49 1.38V9.83h-2.66c.04.75 0 8.67 0 8.67h2.66v-4.84c0-.24.02-.48.09-.65.19-.48.63-.98 1.36-.98.96 0 1.34.73 1.34 1.79v4.68h2.88z"/>
+        </svg>
+        <span class="mono">LinkedIn</span>
+      </a>
+      <a class="ctrl" href="https://github.com/SkyCobra" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
+          <path d="M12 .5a12 12 0 0 0-3.79 23.4c.6.11.82-.26.82-.58v-2c-3.34.73-4.04-1.61-4.04-1.61-.54-1.38-1.33-1.75-1.33-1.75-1.09-.74.08-.72.08-.72 1.2.08 1.84 1.24 1.84 1.24 1.07 1.84 2.82 1.31 3.5 1 .11-.78.42-1.31.76-1.61-2.66-.3-5.46-1.33-5.46-5.93 0-1.31.47-2.38 1.24-3.22-.13-.31-.54-1.53.12-3.19 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.66.25 2.88.12 3.19.77.84 1.24 1.91 1.24 3.22 0 4.62-2.81 5.62-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12 12 0 0 0 12 .5z"/>
+        </svg>
+        <span class="mono">GitHub</span>
+      </a>
+      <a class="ctrl" href={langSwitchHref} aria-label="Switch language">
+        <span class="mono">{t.langToggle}</span>
+      </a>
+    </div>
     <div class="sticker parchment-texture">
       <span class="pin"></span>
       <div class="sticker-grid">
@@ -35,8 +51,8 @@ const guild = PROFILE.guild[lang];
         </svg>
         <div class="ident">
           <div class="handle cinzel">{PROFILE.handle}</div>
-          <div class="role fell">{profileClass} · {lang === 'fr' ? 'Niveau' : 'Level'} {PROFILE.level}</div>
-          <div class="guild fell">{guild}</div>
+          <div class="role body-italic">{profileClass}</div>
+          <div class="guild body-italic">{guild}</div>
         </div>
       </div>
       <dl class="stats">
@@ -61,13 +77,13 @@ const guild = PROFILE.guild[lang];
     padding: 11px;
     border-radius: 12px;
     background:
-      repeating-linear-gradient(0deg, rgba(60,30,10,0.08) 0px, transparent 1px, transparent 4px),
-      linear-gradient(180deg, #c89760 0%, #a87440 50%, #8a5c2a 100%);
+      repeating-linear-gradient(0deg, rgba(20,10,4,0.10) 0%, transparent 1px, transparent 4px),
+      linear-gradient(180deg, #8a5e34 0%, #6e4824 50%, #523619 100%);
     box-shadow:
-      inset 0 0 0 3px #5a3814,
-      inset 0 0 0 5px #b78a55,
-      inset 0 0 0 7px #5a3814,
-      0 8px 18px rgba(0,0,0,.35);
+      inset 0 0 0 3px #3a2410,
+      inset 0 0 0 5px #9c6e38,
+      inset 0 0 0 7px #3a2410,
+      0 10px 24px rgba(0,0,0,.55);
   }
   .plaque-inner {
     padding: 18px 28px;
@@ -86,8 +102,8 @@ const guild = PROFILE.guild[lang];
   .title {
     margin: 0;
     font-weight: 700;
-    font-size: 46px;
-    letter-spacing: 0.06em;
+    font-size: 56px;
+    letter-spacing: 0.08em;
     color: #fbeec4;
     text-shadow: 0 1px 0 #3b220c;
     line-height: 1.05;
@@ -104,20 +120,29 @@ const guild = PROFILE.guild[lang];
     flex: 1;
     position: relative;
   }
-  .lang-toggle {
+  .top-controls {
     position: absolute;
     top: -10px;
     right: 0;
     z-index: 5;
+    display: flex;
+    gap: 6px;
+  }
+  .ctrl {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     background: rgba(31,22,12,0.85);
     color: #fbeec4;
-    padding: 6px 12px;
+    padding: 6px 10px;
     border-radius: 4px;
     font-size: 11px;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.08em;
     border: 1px solid var(--accent-deep);
+    transition: background 150ms ease;
   }
-  .lang-toggle:hover { background: var(--accent-deep); }
+  .ctrl:hover { background: var(--accent-deep); }
+  .ctrl svg { flex: 0 0 14px; }
 
   .sticker {
     position: relative;
@@ -152,12 +177,10 @@ const guild = PROFILE.guild[lang];
     color: var(--ink-1);
   }
   .role {
-    font-style: italic;
     font-size: 13px;
     color: var(--ink-2);
   }
   .guild {
-    font-style: italic;
     font-size: 12px;
     color: var(--ink-3);
   }
@@ -189,5 +212,46 @@ const guild = PROFILE.guild[lang];
     font-size: 18px;
     color: var(--ink-1);
     font-variant-numeric: tabular-nums;
+  }
+
+  /* Tablet — keep horizontal layout but shrink everything slightly. */
+  @media (max-width: 900px) {
+    .header { gap: 14px; }
+    .plaque-inner { padding: 14px 20px; }
+    .title { font-size: 42px; }
+    .pitch { font-size: 14px; }
+    .sticker { padding: 16px 18px 14px; }
+    .top-controls { top: -8px; }
+    .ctrl { font-size: 10px; padding: 5px 8px; }
+  }
+
+  /* Mobile — stack vertically, smaller title, compact stats. */
+  @media (max-width: 600px) {
+    .header {
+      flex-direction: column;
+      gap: 28px;
+      margin-bottom: 24px;
+    }
+    .plaque,
+    .sticker-wrap { flex: none; width: 100%; }
+    .plaque-inner { padding: 12px 16px; }
+    .subtitle { font-size: 10px; letter-spacing: 0.28em; }
+    .title { font-size: 32px; letter-spacing: 0.06em; }
+    .pitch { font-size: 13px; }
+    .top-controls {
+      position: static;
+      margin-bottom: 8px;
+      justify-content: flex-end;
+    }
+    .sticker {
+      padding: 14px 16px 12px;
+      transform: rotate(0.6deg);
+    }
+    .sticker-grid { gap: 12px; }
+    .handle { font-size: 18px; }
+    .role { font-size: 12px; }
+    .guild { font-size: 11px; }
+    .stats { margin-top: 10px; gap: 3px 12px; }
+    .stats dd { font-size: 16px; }
   }
 </style>

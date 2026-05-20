@@ -33,8 +33,8 @@ export const DEFAULT_ACCENT: AccentKey = 'or';
 
 export const I18N = {
   fr: {
-    title: 'Tableau de Guilde',
-    subtitle: 'Recueil des œuvres de SkyCobra',
+    title: 'SkyCobra',
+    subtitle: 'Portfolio · Développeur XR & Jeu Vidéo',
     pitch: 'Développeur XR français, diplômé d’Epitech. Bientôt 10 ans à façonner des mondes immersifs et oniriques — du 2D à la VR, en passant par les game jams.',
     sections: {
       students:  { name: 'Projets Étudiants',  motto: 'Premiers parchemins' },
@@ -51,8 +51,8 @@ export const I18N = {
     langToggle: 'EN',
   },
   en: {
-    title: 'Guild Board',
-    subtitle: 'SkyCobra · Compendium of Works',
+    title: 'SkyCobra',
+    subtitle: 'Portfolio · XR & Game Developer',
     pitch: 'French XR developer, Epitech graduate. Nearly a decade shaping immersive, dreamlike worlds — from 2D to VR, with a serious game-jam habit.',
     sections: {
       students:  { name: 'Student Projects', motto: 'First scrolls' },
@@ -87,8 +87,7 @@ export type GenreGlyphKind = 'swords' | 'mug' | 'arch' | 'scroll' | 'visor' | 's
 export const PROFILE = {
   handle: 'SkyCobra',
   twitter: '@SkyC0bra',
-  className: { fr: 'Mage-Programmeur XR', en: 'XR Mage-Programmer' },
-  level: 9,
+  className: { fr: 'Développeur XR · Unity / VR', en: 'XR Developer · Unity / VR' },
   guild: { fr: 'Diplômé d’Epitech', en: 'Epitech graduate' },
   stats: { years: 9, games: 15, jams: 11, vr: 3 },
 } as const;

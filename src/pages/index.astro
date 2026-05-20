@@ -6,6 +6,6 @@ import { I18N } from '../data/portfolio';
 const lang = 'fr' as const;
 const t = I18N[lang];
 ---
-<Layout title={`${t.title} · SkyCobra`} description={t.pitch} lang={lang}>
+<Layout title={`${t.title} — ${t.subtitle}`} description={t.pitch} lang={lang}>
   <Portfolio lang={lang} />
 </Layout>

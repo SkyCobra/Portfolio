@@ -50,18 +50,39 @@ body {
     repeating-linear-gradient(0deg, rgba(255,220,170,0.05) 0px, transparent 0.6px, transparent 9px),
     repeating-linear-gradient(0deg, rgba(20,10,4,0.10) 0px, transparent 0.4px, transparent 13px),
 
-    /* ── PROMINENT GRAIN VEINS — a few darker horizontal streaks at specific Y positions. */
-    linear-gradient(180deg, transparent 12.0%, rgba(0,0,0,0.18) 12.3%, transparent 12.7%),
-    linear-gradient(180deg, transparent 27.5%, rgba(0,0,0,0.14) 27.8%, transparent 28.3%),
-    linear-gradient(180deg, transparent 41.0%, rgba(0,0,0,0.22) 41.4%, transparent 41.8%),
-    linear-gradient(180deg, transparent 56.5%, rgba(0,0,0,0.16) 56.8%, transparent 57.3%),
-    linear-gradient(180deg, transparent 69.0%, rgba(0,0,0,0.20) 69.4%, transparent 70.0%),
-    linear-gradient(180deg, transparent 84.5%, rgba(0,0,0,0.18) 84.8%, transparent 85.3%),
+    /* ── VEIN LINES — sharp thin dark streaks, three repeating patterns with different
+       periods (180px / 247px / 311px) so they never align — gives an irregular look. */
 
-    /* ── HIGHLIGHT GRAIN LINES — subtle cream lines where the grain catches light. */
-    linear-gradient(180deg, transparent 19.5%, rgba(255,220,170,0.08) 19.7%, transparent 20.0%),
-    linear-gradient(180deg, transparent 48.5%, rgba(255,220,170,0.07) 48.7%, transparent 49.0%),
-    linear-gradient(180deg, transparent 76.5%, rgba(255,220,170,0.08) 76.7%, transparent 77.0%),
+    /* Cluster pattern: two close hair-thin veins every 180px. */
+    repeating-linear-gradient(180deg,
+      transparent 0px, transparent 86px,
+      rgba(12,6,2,0.85) 87px, rgba(12,6,2,0.95) 88px, rgba(12,6,2,0.7) 89px,
+      transparent 90px, transparent 94px,
+      rgba(12,6,2,0.55) 95px, rgba(12,6,2,0.7) 96px,
+      transparent 97px, transparent 180px),
+
+    /* Bold solo vein every 247px. */
+    repeating-linear-gradient(180deg,
+      transparent 0px, transparent 138px,
+      rgba(8,4,1,0.6) 139px, rgba(8,4,1,0.85) 140px, rgba(8,4,1,0.95) 141px,
+      rgba(8,4,1,0.7) 142px, transparent 143px, transparent 247px),
+
+    /* Hair-thin triplet every 311px. */
+    repeating-linear-gradient(180deg,
+      transparent 0px, transparent 60px,
+      rgba(12,6,2,0.5) 61px, transparent 62px, transparent 66px,
+      rgba(12,6,2,0.6) 67px, transparent 68px, transparent 72px,
+      rgba(12,6,2,0.45) 73px, transparent 74px, transparent 311px),
+
+    /* ── HIGHLIGHT VEINS — thin cream lines that catch the light, two patterns. */
+    repeating-linear-gradient(180deg,
+      transparent 0px, transparent 124px,
+      rgba(255,225,180,0.18) 125px, rgba(255,225,180,0.22) 126px,
+      transparent 127px, transparent 215px),
+
+    repeating-linear-gradient(180deg,
+      transparent 0px, transparent 58px,
+      rgba(255,225,180,0.12) 59px, transparent 60px, transparent 287px),
 
     /* ── KNOTS — small dark blemishes scattered across the slab. */
     radial-gradient(ellipse 30px 24px at 11% 14%, rgba(20,10,4,0.55) 0%, transparent 65%),
@@ -125,8 +146,8 @@ a { color: inherit; text-decoration: none; }
 .cinzel { font-family: 'Cinzel', serif; }
 /* Display italic — ornate, used for big italic copy (hero pitch, section mottos). */
 .fell { font-family: 'IM Fell English', Georgia, serif; }
-/* Body italic — readable garaldic italic for small descriptive text. */
-.body-italic { font-family: 'EB Garamond', Georgia, serif; font-style: italic; }
+/* Body italic — modern serif italic optimized for screen reading at small sizes. */
+.body-italic { font-family: 'Lora', Georgia, serif; font-style: italic; font-weight: 500; }
 
 /* Respect users who prefer no motion (vestibular sensitivity, reduced-motion OS setting).
    Cancel rotations on cards/sticker and shorten transitions to near-instant. */

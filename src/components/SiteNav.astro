@@ -1,0 +1,128 @@
+---
+import { SITE, NAV, I18N, localizeHref, type Lang } from '../data/portfolio';
+
+interface Props {
+  lang: Lang;
+  /** Path of the equivalent page in the other language. */
+  langSwitchHref: string;
+  /** Marks the current page in the nav for assistive tech. */
+  current?: string;
+}
+
+const { lang, langSwitchHref, current } = Astro.props;
+const t = I18N[lang];
+const home = lang === 'fr' ? '/' : '/en/';
+---
+<nav class="site-nav" aria-label={lang === 'fr' ? 'Navigation principale' : 'Main navigation'}>
+  <a class="wordmark cinzel" href={home}>
+    {SITE.name}
+  </a>
+
+  <ul class="links">
+    {NAV.map((item) => {
+      const href = localizeHref(item.href, lang);
+      const label = lang === 'fr' ? item.labelFr : item.labelEn;
+      return (
+        <li>
+          <a href={href} aria-current={current === item.href ? 'page' : undefined}>
+            {label}
+          </a>
+        </li>
+      );
+    })}
+    <li class="lang">
+      <a href={langSwitchHref} lang={lang === 'fr' ? 'en' : 'fr'}>
+        <span class="mono">{t.langToggle}</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<style>
+  /* La navigation est posée sur la poutre du décor, sombre dans les deux
+     thèmes — son texte reste donc clair, sans basculer avec le reste. */
+  .site-nav {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    max-width: var(--page-max);
+    margin: 0 auto;
+    padding: 22px var(--page-pad) 0;
+  }
+
+  /* Le voile déborde volontairement du conteneur centré : la poutre traverse
+     tout l'écran, le voile doit en faire autant. */
+  .site-nav::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 100vw;
+    height: 190%;
+    transform: translateX(-50%);
+    background: var(--nav-scrim);
+    pointer-events: none;
+    z-index: -1;
+    transition: background 550ms ease;
+  }
+
+  .wordmark {
+    font-size: 21px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--parchment-1);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75);
+    white-space: nowrap;
+  }
+
+  .links {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-ui);
+    font-size: 14px;
+  }
+
+  .links a {
+    display: block;
+    padding: 8px 14px;
+    border-radius: 4px;
+    color: rgba(240, 230, 205, 0.92);
+    letter-spacing: 0.02em;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75);
+    transition: background-color 160ms ease, color 160ms ease;
+  }
+
+  .links a:hover {
+    background: rgba(244, 236, 214, 0.12);
+    color: var(--parchment-1);
+  }
+
+  .links a[aria-current='page'] {
+    color: var(--accent-soft);
+    box-shadow: inset 0 -2px 0 var(--accent);
+  }
+
+  .lang a {
+    border: 1px solid rgba(244, 236, 214, 0.30);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+  }
+
+  @media (max-width: 600px) {
+    .site-nav {
+      justify-content: center;
+      gap: 12px;
+      padding-top: 16px;
+    }
+    .wordmark { font-size: 19px; }
+    .links { font-size: 13px; gap: 2px; }
+    .links a { padding: 7px 10px; }
+  }
+</style>

@@ -49,6 +49,36 @@ export const I18N = {
     emptyTitle: 'Aucune quête achevée',
     emptyBody: 'Les prochaines aventures s’écrivent. Reviens bientôt — un grand parchemin attend d’être déroulé ici.',
     langToggle: 'EN',
+    home: {
+      // ⚠️ À RÉDIGER — vidé volontairement. Aucun texte inventé ne doit partir en ligne.
+      heroKicker: '[À RÉDIGER — accroche courte]',
+      heroTitle: '[À RÉDIGER — phrase d’accueil principale]',
+      heroBody: '[À RÉDIGER — deux phrases de présentation]',
+      ctaProjects: 'Voir les projets',
+      ctaContact: 'Me contacter',
+      servicesTitle: 'Ce que je fais',
+      servicesLead: '[À RÉDIGER — une ligne d’introduction]',
+      currentTitle: 'En ce moment',
+      proTitle: 'Travaux professionnels',
+      proLead: '[À RÉDIGER]',
+      featuredTitle: 'Projets marquants',
+      featuredLead: '[À RÉDIGER]',
+      allProjects: 'Tous les projets',
+      contactTitle: '[À RÉDIGER — titre de la section contact]',
+      contactBody: '[À RÉDIGER — invitation à te contacter]',
+      contactEmail: 'Envoyer un e-mail',
+      rights: 'Tous droits réservés.',
+    },
+    about: {
+      // ⚠️ À RÉDIGER
+      title: 'À propos',
+      lead: '[À RÉDIGER — qui tu es, en deux phrases]',
+      pathTitle: 'Parcours',
+      pathBody: '[À RÉDIGER — ton parcours]',
+      skillsTitle: 'Compétences',
+      approachTitle: 'Façon de travailler',
+      approachBody: '[À RÉDIGER — ta méthode]',
+    },
   },
   en: {
     title: 'SkyCobra',
@@ -67,6 +97,34 @@ export const I18N = {
     emptyTitle: 'No quest completed yet',
     emptyBody: 'New adventures are being written. Check back soon — a grand scroll waits to be unrolled here.',
     langToggle: 'FR',
+    home: {
+      heroKicker: '[TO WRITE — short kicker]',
+      heroTitle: '[TO WRITE — main headline]',
+      heroBody: '[TO WRITE — two-sentence intro]',
+      ctaProjects: 'See the projects',
+      ctaContact: 'Get in touch',
+      servicesTitle: 'What I do',
+      servicesLead: '[TO WRITE]',
+      currentTitle: 'Currently building',
+      proTitle: 'Professional work',
+      proLead: '[TO WRITE]',
+      featuredTitle: 'Selected projects',
+      featuredLead: '[TO WRITE]',
+      allProjects: 'All projects',
+      contactTitle: '[TO WRITE — contact section title]',
+      contactBody: '[TO WRITE — invitation to get in touch]',
+      contactEmail: 'Send an email',
+      rights: 'All rights reserved.',
+    },
+    about: {
+      title: 'About',
+      lead: '[TO WRITE — who you are, in two sentences]',
+      pathTitle: 'Background',
+      pathBody: '[TO WRITE — your background]',
+      skillsTitle: 'Skills',
+      approachTitle: 'How I work',
+      approachBody: '[TO WRITE — how you work]',
+    },
   },
 } as const;
 
@@ -91,6 +149,139 @@ export const PROFILE = {
   guild: { fr: 'Diplômé d’Epitech', en: 'Epitech graduate' },
   stats: { years: 9, games: 15, jams: 11, vr: 3 },
 } as const;
+
+/* ────────────────────────────────────────────────────────────────────────────
+   Site-level identity, navigation and commercial content.
+   The portfolio is now one section of a freelance site, so everything below
+   describes the studio rather than the game collection.
+   ──────────────────────────────────────────────────────────────────────────── */
+
+export const SITE = {
+  name: 'SkyCobra Studio',
+  owner: 'Romain Castel',
+  domain: 'skycobra-studio.com',
+  // ⚠️ NOT CONFIRMED — invented from the OVH MX records. Romain must supply the real one.
+  email: '[À RENSEIGNER — adresse e-mail]',
+  linkedin: 'https://www.linkedin.com/in/romain-castel/',
+  github: 'https://github.com/SkyCobra',
+  itch: 'https://skycobra.itch.io',
+  twitter: '@SkyC0bra',
+} as const;
+
+export interface NavItem {
+  href: string;
+  labelFr: string;
+  labelEn: string;
+}
+
+/** Paths are language-prefixed at render time by `localizeHref`. */
+export const NAV: NavItem[] = [
+  { href: '/projets',  labelFr: 'Projets',  labelEn: 'Projects' },
+  { href: '/a-propos', labelFr: 'À propos', labelEn: 'About' },
+  // Absolute so it still works from /projets, where there is no contact section.
+  { href: '/#contact', labelFr: 'Contact',  labelEn: 'Contact' },
+];
+
+/** English routes differ from the French ones, so map them explicitly. */
+const EN_ROUTES: Record<string, string> = {
+  '/projets': '/en/projects',
+  '/a-propos': '/en/about',
+};
+
+export function localizeHref(href: string, lang: Lang): string {
+  if (href.startsWith('#')) return href;
+  if (lang === 'fr') return href;
+  return EN_ROUTES[href] ?? `/en${href}`;
+}
+
+export interface Service {
+  id: string;
+  titleFr: string;
+  titleEn: string;
+  bodyFr: string;
+  bodyEn: string;
+  tools: string[];
+}
+
+// ⚠️ VIDÉ — trois emplacements pour montrer la structure. Le nombre de services et
+// leur découpage sont à décider par Romain, ce ne sont pas des propositions.
+export const SERVICES: Service[] = [
+  {
+    id: 'service-1',
+    titleFr: '[À RÉDIGER — service 1]',
+    titleEn: '[TO WRITE — service 1]',
+    bodyFr: '[À RÉDIGER]',
+    bodyEn: '[TO WRITE]',
+    tools: [],
+  },
+  {
+    id: 'service-2',
+    titleFr: '[À RÉDIGER — service 2]',
+    titleEn: '[TO WRITE — service 2]',
+    bodyFr: '[À RÉDIGER]',
+    bodyEn: '[TO WRITE]',
+    tools: [],
+  },
+  {
+    id: 'service-3',
+    titleFr: '[À RÉDIGER — service 3]',
+    titleEn: '[TO WRITE — service 3]',
+    bodyFr: '[À RÉDIGER]',
+    bodyEn: '[TO WRITE]',
+    tools: [],
+  },
+];
+
+/** The three games promoted on the home page — each demonstrates a different skill. */
+export const FEATURED_IDS = ['yogurt-royale', 'sea-of-dreams', 'dungeon-soul'] as const;
+
+export interface CurrentWork {
+  id: string;
+  title: string;
+  statusFr: string;
+  statusEn: string;
+  tagFr: string;
+  tagEn: string;
+  tools: string[];
+}
+
+// Title confirmed by Romain; everything else still to be supplied.
+export const CURRENT: CurrentWork = {
+  id: 'adventure-haven',
+  title: 'Adventure Haven',
+  statusFr: 'En développement',
+  statusEn: 'In development',
+  tagFr: '[À RÉDIGER — de quoi parle Adventure Haven ?]',
+  tagEn: '[TO WRITE — what is Adventure Haven?]',
+  tools: [],
+};
+
+export interface ProWork {
+  id: string;
+  title: string;
+  clientFr: string;
+  clientEn: string;
+  bodyFr: string;
+  bodyEn: string;
+  tools: string[];
+  /** Public YouTube URLs. Empty until Romain supplies them. */
+  videos: string[];
+}
+
+// ⚠️ Client name confirmed by Romain. Wording still to be written — and to be
+// cleared with his former employer before anything goes public.
+export const PRO: ProWork[] = [
+  {
+    id: 'mimbus',
+    title: '[À RÉDIGER — intitulé des travaux]',
+    clientFr: 'Mimbus',
+    clientEn: 'Mimbus',
+    bodyFr: '[À RÉDIGER — ce que tu as fait, après validation de ton ancien employeur]',
+    bodyEn: '[TO WRITE — pending employer approval]',
+    tools: [],
+    videos: [],
+  },
+];
 
 export const RANK_PIPS: Record<Rank, number> = {
   Apprenti: 1,
@@ -191,4 +382,18 @@ export function getRole(game: Game, lang: Lang): string {
 }
 export function getGenreLabel(genre: GenreKey, lang: Lang): string {
   return GENRES[genre][lang];
+}
+
+/** Flat list of every game, regardless of section. */
+export function allGames(): Game[] {
+  return [...GAMES.students, ...GAMES.gamejams, ...GAMES.published];
+}
+
+export function findGame(id: string): Game | undefined {
+  return allGames().find((g) => g.id === id);
+}
+
+/** The featured games, in the order declared by FEATURED_IDS. */
+export function featuredGames(): Game[] {
+  return FEATURED_IDS.map(findGame).filter((g): g is Game => Boolean(g));
 }

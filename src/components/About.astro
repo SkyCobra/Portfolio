@@ -1,0 +1,164 @@
+---
+import { I18N, SERVICES, SITE, PROFILE, type Lang } from '../data/portfolio';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const a = I18N[lang].about;
+const h = I18N[lang].home;
+
+// Skills are derived from the services rather than duplicated, so the two
+// sections can never drift apart.
+const skills = [...new Set(SERVICES.flatMap((s) => s.tools))];
+---
+<main id="main" class="about">
+  <header class="head">
+    <h1 class="cinzel">{a.title}</h1>
+    <p class="lead">{a.lead}</p>
+  </header>
+
+  <div class="panels">
+    <article class="panel stone-panel">
+      <h2 class="cinzel">{a.pathTitle}</h2>
+      <p>{a.pathBody}</p>
+    </article>
+
+    <article class="panel stone-panel">
+      <h2 class="cinzel">{a.approachTitle}</h2>
+      <p>{a.approachBody}</p>
+    </article>
+  </div>
+
+  <section class="skills-block" aria-labelledby="skills-title">
+    <h2 id="skills-title" class="cinzel">{a.skillsTitle}</h2>
+    <ul class="skills">
+      {skills.map((s) => <li class="mono">{s}</li>)}
+    </ul>
+  </section>
+
+  <p class="cta">
+    <a class="btn" href={`mailto:${SITE.email}`}>{h.contactEmail}</a>
+    <span class="who mono">{PROFILE.guild[lang]}</span>
+  </p>
+</main>
+
+<style>
+  .about {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    padding: 60px var(--page-pad) 40px;
+    font-family: var(--font-ui);
+  }
+
+  .head { max-width: 720px; margin-bottom: 36px; }
+
+  .head h1 {
+    margin: 0 0 18px;
+    font-size: clamp(28px, 4.4vw, 42px);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--text-strong);
+    text-shadow: var(--halo-fort);
+  }
+
+  .lead {
+    margin: 0;
+    font-size: clamp(16px, 1.7vw, 18px);
+    line-height: 1.65;
+    color: var(--text);
+  }
+
+  .panels {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  /* Fond et bordure viennent de .stone-panel — voir global.css. */
+  .panel {
+    padding: 28px;
+    border-radius: 3px;
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.42);
+  }
+
+  .panel h2 {
+    margin: 0 0 12px;
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--text-strong);
+  }
+
+  .panel p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--text);
+  }
+
+  .skills-block { margin-top: 44px; }
+
+  .skills-block h2 {
+    margin: 0 0 16px;
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--text-strong);
+    text-shadow: var(--halo-fort);
+  }
+
+  .skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .skills li {
+    padding: 7px 13px;
+    border: 1px solid var(--tag-border);
+    border-radius: 2px;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--text);
+  }
+
+  .cta {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin: 48px 0 0;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 13px 26px;
+    border-radius: 3px;
+    background: linear-gradient(180deg, var(--accent) 0%, var(--accent-deep) 100%);
+    border: 1px solid var(--accent-deep);
+    color: #2a1b0c;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+    transition: transform 160ms ease;
+  }
+  .btn:hover { transform: translateY(-1px); }
+
+  .who {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  @media (max-width: 700px) {
+    .panels { grid-template-columns: 1fr; }
+    .about { padding-top: 40px; }
+  }
+</style>

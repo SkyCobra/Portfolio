@@ -1,0 +1,17 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Portfolio from '../../components/Portfolio.astro';
+import { I18N, SITE } from '../../data/portfolio';
+
+const lang = 'fr' as const;
+const t = I18N[lang];
+---
+<Layout
+  title={`Projets — ${SITE.name}`}
+  description={t.pitch}
+  lang={lang}
+  langSwitchHref="/en/projects"
+  current="/projets"
+>
+  <Portfolio lang={lang} />
+</Layout>

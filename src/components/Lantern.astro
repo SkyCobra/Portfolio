@@ -1,0 +1,37 @@
+---
+import type { Lang } from '../data/portfolio';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+
+const label = lang === 'fr'
+  ? 'Allumer ou éteindre la lanterne'
+  : 'Turn the lantern on or off';
+---
+{/* Le halo est un frère de la lanterne, pas un enfant : il doit passer sous le
+    contenu (z-index négatif), ce qu'un descendant d'un élément positionné ne
+    pourrait pas faire. */}
+<div class="lantern-halo" aria-hidden="true"></div>
+
+<button class="lantern" type="button" data-lantern aria-pressed="true" title={label}>
+  <span class="chain" aria-hidden="true"></span>
+  <span class="inner-glow" aria-hidden="true"></span>
+  <span class="flame" aria-hidden="true"></span>
+  <span class="bloom" aria-hidden="true"></span>
+  <span class="body" aria-hidden="true"></span>
+  <span class="sr-only">{label}</span>
+</button>
+
+<style>
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+</style>

@@ -1,11 +1,11 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 
-// Project repo deploy at https://skycobra.github.io/Portfolio/
-// If you later rename the repo to skycobra.github.io, set base back to '/'.
+// Served from the apex domain, so the site lives at the root — no base path.
+// public/CNAME tells GitHub Pages which domain to bind.
 export default defineConfig({
-  site: 'https://skycobra.github.io',
-  base: '/Portfolio/',
+  site: 'https://skycobra-studio.com',
+  base: '/',
   trailingSlash: 'ignore',
   build: {
     assets: 'assets',

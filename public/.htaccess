@@ -1,0 +1,106 @@
+# ============================================================================
+#  SkyCobra Studio — configuration Apache (hébergement OVH)
+#
+#  DEUX INTERRUPTEURS, pilotés par la simple présence d'un fichier à la racine
+#  de www/. Aucune modification de ce fichier n'est nécessaire au quotidien.
+#
+#    garde.flag        → tout le monde voit /garde.html (réponse 200)
+#    maintenance.flag  → tout le monde voit /maintenance.html (réponse 503)
+#
+#  Activer   : envoyer un fichier vide portant ce nom dans www/
+#  Désactiver: le supprimer
+#
+#  Dans les deux cas, l'adresse IP déclarée ci-dessous continue de voir le
+#  vrai site — ce qui permet de travailler et de vérifier avant d'ouvrir.
+# ============================================================================
+
+# ⚠️ À REMPLIR : ton adresse IP publique (https://ifconfig.me).
+#    Tant qu'elle est fausse, tu verras la page de garde comme tout le monde.
+#    Si ton IP change (box redémarrée), il faut la remettre à jour.
+SetEnvIf Remote_Addr "^203\.0\.113\.1$" ADMIN_IP
+
+RewriteEngine On
+
+# ── 1. HTTPS obligatoire ────────────────────────────────────────────────────
+#    OVH place un proxy devant Apache : on teste l'en-tête transmis, pas %{HTTPS}.
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# ── 2. Une seule adresse canonique : sans www ───────────────────────────────
+RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+
+# ── 3. Maintenance (503) ────────────────────────────────────────────────────
+#    503 et non 404 : les moteurs de recherche comprennent que c'est temporaire
+#    et ne déréférencent pas le site.
+RewriteCond %{DOCUMENT_ROOT}/maintenance.flag -f
+RewriteCond %{ENV:ADMIN_IP} !=1
+RewriteCond %{REQUEST_URI} !^/maintenance\.html$
+RewriteCond %{REQUEST_URI} !\.(css|js|png|jpe?g|gif|svg|webp|ico|woff2?)$
+RewriteRule ^ - [R=503,L]
+ErrorDocument 503 /maintenance.html
+
+# ── 4. Page de garde (200) ──────────────────────────────────────────────────
+#    Contrairement à la maintenance, c'est du contenu volontaire : on sert la
+#    page sans redirection ni code d'erreur.
+RewriteCond %{DOCUMENT_ROOT}/garde.flag -f
+RewriteCond %{ENV:ADMIN_IP} !=1
+RewriteCond %{REQUEST_URI} !^/garde\.html$
+RewriteCond %{REQUEST_URI} !\.(css|js|png|jpe?g|gif|svg|webp|ico|woff2?)$
+RewriteRule ^ /garde.html [L]
+
+# ── 5. En-têtes de sécurité ─────────────────────────────────────────────────
+<IfModule mod_headers.c>
+  # Empêche le navigateur de deviner un type de fichier différent de l'annoncé.
+  Header always set X-Content-Type-Options "nosniff"
+
+  # Ne fuite pas l'URL complète vers les sites externes.
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+  # Aucune API sensible n'est utilisée : on les coupe toutes.
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), interest-cohort=()"
+
+  # HSTS — déploiement prudent. Une fois qu'un navigateur a vu cet en-tête, il
+  # REFUSE tout accès en HTTP pendant la durée indiquée, et on ne peut pas
+  # revenir en arrière à distance. On démarre donc à 5 minutes.
+  # Passer à "max-age=31536000; includeSubDomains" après ~1 semaine sans incident.
+  Header always set Strict-Transport-Security "max-age=300"
+
+  # Politique de sécurité du contenu. 'unsafe-inline' sur style-src est requis
+  # par Astro, qui insère des styles en ligne. frame-src autorise les jeux
+  # itch.io intégrés et les vidéos YouTube sans cookie.
+  Header always set Content-Security-Policy "default-src 'self'; img-src 'self' data: https://img.itch.zone; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; frame-src https://itch.io https://*.itch.io https://www.youtube-nocookie.com; script-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'"
+
+  # ⚠️ TANT QUE LE SITE EST EN CONSTRUCTION : interdit l'indexation.
+  #    À SUPPRIMER le jour de la mise en ligne officielle, sinon le site
+  #    n'apparaîtra jamais dans Google.
+  Header always set X-Robots-Tag "noindex, nofollow"
+
+  # Indique aux robots de repasser plus tard pendant une maintenance.
+  Header always set Retry-After "7200" "expr=%{REQUEST_STATUS} == 503"
+</IfModule>
+
+# ── 6. Cache ────────────────────────────────────────────────────────────────
+<IfModule mod_expires.c>
+  ExpiresActive On
+  # Les fichiers d'Astro portent un hachage dans leur nom : cache très long.
+  <FilesMatch "\.(css|js|woff2?|svg|png|jpe?g|webp|ico)$">
+    ExpiresDefault "access plus 1 year"
+    Header append Cache-Control "immutable"
+  </FilesMatch>
+  # Le HTML doit rester frais pour que les mises à jour soient visibles.
+  <FilesMatch "\.html$">
+    ExpiresDefault "access plus 0 seconds"
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+# ── 7. Divers ───────────────────────────────────────────────────────────────
+# Pas de listing de répertoire.
+Options -Indexes
+
+# Ne pas servir les fichiers de travail s'ils atterrissaient là par erreur.
+<FilesMatch "^(\.env|\.git.*|.*\.md|package.*\.json)$">
+  Require all denied
+</FilesMatch>

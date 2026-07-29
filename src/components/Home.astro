@@ -1,0 +1,393 @@
+---
+import {
+  I18N, SITE, SERVICES, CURRENT, PRO, PROFILE,
+  featuredGames, getTag, getRole, localizeHref, type Lang,
+} from '../data/portfolio';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = I18N[lang];
+const h = t.home;
+
+const projectsHref = localizeHref('/projets', lang);
+const featured = featuredGames();
+
+const stats = [
+  { value: PROFILE.stats.years, label: t.stats.years },
+  { value: PROFILE.stats.games, label: t.stats.games },
+  { value: PROFILE.stats.jams,  label: t.stats.jams },
+  { value: PROFILE.stats.vr,    label: t.stats.vr },
+];
+---
+<main id="main" class="home">
+  <!-- ── HERO — le texte est posé à même l'illustration, sans panneau. -->
+  <section class="hero">
+    <p class="kicker mono">{h.heroKicker}</p>
+    <h1 class="cinzel">{h.heroTitle}</h1>
+    <p class="lead">{h.heroBody}</p>
+
+    <div class="actions">
+      <a class="btn btn-primary" href={projectsHref}>{h.ctaProjects}</a>
+      <a class="btn btn-ghost" href="#contact">{h.ctaContact}</a>
+    </div>
+
+    <ul class="stats">
+      {stats.map((s) => (
+        <li>
+          <span class="stat-value cinzel">{s.value}</span>
+          <span class="stat-label">{s.label}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- ── SERVICES -->
+  <section class="band" aria-labelledby="services-title">
+    <header class="band-head">
+      <h2 id="services-title" class="cinzel">{h.servicesTitle}</h2>
+      <p class="band-lead">{h.servicesLead}</p>
+    </header>
+
+    <div class="grid grid-3">
+      {SERVICES.map((s) => (
+        <article class="panel stone-panel">
+          <h3 class="cinzel">{lang === 'fr' ? s.titleFr : s.titleEn}</h3>
+          <p>{lang === 'fr' ? s.bodyFr : s.bodyEn}</p>
+          <ul class="tags">
+            {s.tools.map((tool) => <li class="mono">{tool}</li>)}
+          </ul>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- ── CURRENT WORK -->
+  <section class="band" aria-labelledby="current-title">
+    <header class="band-head">
+      <h2 id="current-title" class="cinzel">{h.currentTitle}</h2>
+    </header>
+
+    <article class="panel stone-panel current">
+      <p class="status mono">
+        <span class="dot" aria-hidden="true"></span>
+        {lang === 'fr' ? CURRENT.statusFr : CURRENT.statusEn}
+      </p>
+      <h3 class="cinzel">{CURRENT.title}</h3>
+      <p>{lang === 'fr' ? CURRENT.tagFr : CURRENT.tagEn}</p>
+      <ul class="tags">
+        {CURRENT.tools.map((tool) => <li class="mono">{tool}</li>)}
+      </ul>
+    </article>
+  </section>
+
+  <!-- ── PROFESSIONAL WORK -->
+  <section class="band" aria-labelledby="pro-title">
+    <header class="band-head">
+      <h2 id="pro-title" class="cinzel">{h.proTitle}</h2>
+      <p class="band-lead">{h.proLead}</p>
+    </header>
+
+    <div class="grid grid-2">
+      {PRO.map((p) => (
+        <article class="panel stone-panel">
+          <p class="client mono">{lang === 'fr' ? p.clientFr : p.clientEn}</p>
+          <h3 class="cinzel">{p.title}</h3>
+          <p>{lang === 'fr' ? p.bodyFr : p.bodyEn}</p>
+          <ul class="tags">
+            {p.tools.map((tool) => <li class="mono">{tool}</li>)}
+          </ul>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- ── FEATURED GAMES — sober cards here; the full themed board lives at /projets. -->
+  <section class="band" aria-labelledby="featured-title">
+    <header class="band-head">
+      <h2 id="featured-title" class="cinzel">{h.featuredTitle}</h2>
+      <p class="band-lead">{h.featuredLead}</p>
+    </header>
+
+    <div class="grid grid-3">
+      {featured.map((g) => (
+        <article class="panel stone-panel">
+          <p class="client mono">{g.year} · {g.platform}</p>
+          <h3 class="cinzel">{g.title}</h3>
+          <p>{getTag(g, lang)}</p>
+          <p class="role mono">{getRole(g, lang)}</p>
+        </article>
+      ))}
+    </div>
+
+    <p class="band-more">
+      <a class="btn btn-ghost" href={projectsHref}>{h.allProjects}</a>
+    </p>
+  </section>
+
+  <!-- ── CONTACT -->
+  <section class="band" id="contact" aria-labelledby="contact-title">
+    <div class="panel stone-panel contact">
+      <h2 id="contact-title" class="cinzel">{h.contactTitle}</h2>
+      <p>{h.contactBody}</p>
+      <div class="actions">
+        <a class="btn btn-primary" href={`mailto:${SITE.email}`}>{h.contactEmail}</a>
+        <a class="btn btn-ghost" href={SITE.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<style>
+  .home {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    padding: 0 var(--page-pad);
+    font-family: var(--font-ui);
+  }
+
+  /* ── HERO ────────────────────────────────────────────────────────────── */
+
+  .hero {
+    padding: 72px 0 68px;
+    max-width: 760px;
+  }
+
+  .kicker {
+    margin: 0 0 18px;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .hero h1 {
+    margin: 0 0 22px;
+    font-size: clamp(30px, 5vw, 52px);
+    line-height: 1.14;
+    font-weight: 600;
+    letter-spacing: 0.005em;
+    color: var(--text-strong);
+    text-shadow: var(--halo-fort);
+  }
+
+  .lead {
+    margin: 0 0 32px;
+    font-size: clamp(16px, 1.7vw, 18px);
+    line-height: 1.65;
+    color: var(--text);
+    max-width: 62ch;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 13px 26px;
+    border-radius: 3px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    transition: transform 160ms ease, background-color 160ms ease, border-color 160ms ease;
+  }
+
+  .btn-primary {
+    background: linear-gradient(180deg, var(--accent) 0%, var(--accent-deep) 100%);
+    color: #2a1b0c;
+    border: 1px solid var(--accent-deep);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+  }
+
+  .btn-ghost {
+    border: 1px solid var(--tag-border);
+    color: var(--text);
+  }
+
+  .btn:hover { transform: translateY(-1px); }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent-on-bg); }
+
+  .stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 34px;
+    margin: 46px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .stats li {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .stat-value {
+    font-size: 27px;
+    font-weight: 600;
+    color: var(--accent-on-bg);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  /* ── BANDS ───────────────────────────────────────────────────────────── */
+
+  .band { padding: 30px 0 44px; }
+
+  .band-head { margin-bottom: 26px; }
+
+  .band-head h2 {
+    margin: 0;
+    font-size: clamp(21px, 2.6vw, 27px);
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--text-strong);
+    text-shadow: var(--halo-fort);
+  }
+
+  .band-lead {
+    margin: 8px 0 0;
+    font-size: 15px;
+    color: var(--text-muted);
+  }
+
+  .band-more { margin: 26px 0 0; }
+
+  .grid {
+    display: grid;
+    gap: 20px;
+  }
+
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+
+  /* ── PANELS — parchment surface, neutral type. Material themed, structure not. */
+
+  /* La bordure et le fond viennent de .stone-panel (global.css) — on ne les
+     redéclare pas ici, sinon la spécificité des styles scopés d'Astro les
+     écraserait. */
+  .panel {
+    padding: 26px 26px 24px;
+    border-radius: 3px;
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.42);
+    color: var(--text);
+  }
+
+  .panel h3 {
+    margin: 0 0 12px;
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--text-strong);
+  }
+
+  .panel p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text);
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin: 16px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .tags li {
+    padding: 4px 9px;
+    border: 1px solid var(--tag-border);
+    border-radius: 2px;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--text);
+    background: var(--tag-bg);
+  }
+
+  .client,
+  .role {
+    font-size: 11px !important;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted) !important;
+  }
+
+  .client { margin-bottom: 8px !important; }
+  .role { margin-top: 14px !important; }
+
+  /* Current work — a live indicator, the one flourish allowed here. */
+  .status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 10px !important;
+    font-size: 11px !important;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent) !important;
+  }
+
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 3px rgba(180, 138, 44, 0.24);
+  }
+
+  .current { max-width: 620px; }
+
+  /* ── CONTACT ─────────────────────────────────────────────────────────── */
+
+  .contact {
+    padding: 40px 36px;
+    text-align: center;
+  }
+
+  .contact h2 {
+    margin: 0 0 12px;
+    font-size: clamp(21px, 2.6vw, 27px);
+    font-weight: 600;
+    color: var(--text-strong);
+  }
+
+  .contact p {
+    margin: 0 auto 26px;
+    max-width: 52ch;
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--text);
+  }
+
+  .contact .actions { justify-content: center; }
+
+  /* ── RESPONSIVE ──────────────────────────────────────────────────────── */
+
+  @media (max-width: 900px) {
+    .grid-3 { grid-template-columns: repeat(2, 1fr); }
+    .hero { padding: 52px 0 48px; }
+  }
+
+  @media (max-width: 640px) {
+    .grid-3,
+    .grid-2 { grid-template-columns: 1fr; }
+    .hero { padding: 40px 0 40px; }
+    .stats { gap: 24px; margin-top: 36px; }
+    .btn { padding: 12px 20px; }
+    .contact { padding: 32px 22px; }
+  }
+</style>

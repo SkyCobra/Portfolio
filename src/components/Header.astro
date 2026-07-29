@@ -4,10 +4,13 @@ import { I18N, PROFILE } from '../data/portfolio';
 
 interface Props {
   lang: Lang;
-  langSwitchHref: string;
+  langSwitchHref?: string;
+  /** The site-wide nav now carries the language toggle and social links, so
+      these are off by default to avoid duplicating them on the page. */
+  showControls?: boolean;
 }
 
-const { lang, langSwitchHref } = Astro.props;
+const { lang, langSwitchHref = '#', showControls = false } = Astro.props;
 const t = I18N[lang];
 const profileClass = PROFILE.className[lang];
 const guild = PROFILE.guild[lang];
@@ -21,6 +24,7 @@ const guild = PROFILE.guild[lang];
     </div>
   </div>
   <div class="sticker-wrap">
+    {showControls && (
     <div class="top-controls">
       <a class="ctrl" href="https://www.linkedin.com/in/romain-castel/" target="_blank" rel="noopener" aria-label="LinkedIn">
         <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true">
@@ -38,6 +42,7 @@ const guild = PROFILE.guild[lang];
         <span class="mono">{t.langToggle}</span>
       </a>
     </div>
+    )}
     <div class="sticker parchment-texture">
       <span class="pin"></span>
       <div class="sticker-grid">
@@ -76,14 +81,15 @@ const guild = PROFILE.guild[lang];
     flex: 1.4;
     padding: 11px;
     border-radius: 12px;
-    background:
-      repeating-linear-gradient(0deg, rgba(20,10,4,0.10) 0%, transparent 1px, transparent 4px),
-      linear-gradient(180deg, #8a5e34 0%, #6e4824 50%, #523619 100%);
+    /* Pierre taillée, et elle suit le thème : sombre la nuit, ensoleillée le
+       jour. Le liseré doré, lui, reste — c'est l'accent de la marque. */
+    background: var(--plaque-bg);
     box-shadow:
-      inset 0 0 0 3px #3a2410,
-      inset 0 0 0 5px #9c6e38,
-      inset 0 0 0 7px #3a2410,
-      0 10px 24px rgba(0,0,0,.55);
+      inset 0 0 0 3px var(--plaque-edge),
+      inset 0 0 0 5px rgba(180, 138, 44, 0.42),
+      inset 0 0 0 7px var(--plaque-edge),
+      var(--plaque-drop);
+    transition: background 550ms ease, box-shadow 550ms ease;
   }
   .plaque-inner {
     padding: 18px 28px;
@@ -97,22 +103,25 @@ const guild = PROFILE.guild[lang];
     text-transform: uppercase;
     font-size: 12px;
     letter-spacing: 0.36em;
-    color: #e6d6a4;
+    color: var(--plaque-sub);
+    transition: color 550ms ease;
   }
   .title {
     margin: 0;
     font-weight: 700;
     font-size: 56px;
     letter-spacing: 0.08em;
-    color: #fbeec4;
-    text-shadow: 0 1px 0 #3b220c;
+    color: var(--plaque-title);
+    text-shadow: var(--plaque-title-shadow);
+    transition: color 550ms ease;
     line-height: 1.05;
   }
   .pitch {
     margin: 0;
     font-style: italic;
     font-size: 15.5px;
-    color: #f4ecd6;
+    color: var(--plaque-pitch);
+    transition: color 550ms ease;
     max-width: 560px;
   }
 

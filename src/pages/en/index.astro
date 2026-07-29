@@ -1,11 +1,16 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import Portfolio from '../../components/Portfolio.astro';
-import { I18N } from '../../data/portfolio';
+import Home from '../../components/Home.astro';
+import { I18N, SITE } from '../../data/portfolio';
 
 const lang = 'en' as const;
 const t = I18N[lang];
 ---
-<Layout title={`${t.title} — ${t.subtitle}`} description={t.pitch} lang={lang}>
-  <Portfolio lang={lang} />
+<Layout
+  title={`${SITE.name} — ${t.subtitle}`}
+  description={t.home.heroBody}
+  lang={lang}
+  langSwitchHref="/"
+>
+  <Home lang={lang} />
 </Layout>

@@ -1,25 +1,57 @@
 ---
 import '../styles/global.css';
+import SiteNav from '../components/SiteNav.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import Lantern from '../components/Lantern.astro';
+import { SITE, type Lang } from '../data/portfolio';
 
 interface Props {
   title: string;
   description?: string;
-  lang?: 'fr' | 'en';
+  lang?: Lang;
+  /** Path of the same page in the other language. */
+  langSwitchHref: string;
+  /** NAV href of the current page, so the nav can mark it. */
+  current?: string;
 }
 
-const { title, description = 'Portfolio de SkyCobra — Développeur XR.', lang = 'fr' } = Astro.props;
+const {
+  title,
+  description = 'SkyCobra Studio — développement XR, VR et jeu vidéo.',
+  lang = 'fr',
+  langSwitchHref,
+  current,
+} = Astro.props;
 
 const base = import.meta.env.BASE_URL;
-// Compose canonical URL: Astro.site is set in astro.config.mjs.
-const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://skycobra.github.io').toString();
-const ogImage = new URL(`${base}og.png`, Astro.site ?? 'https://skycobra.github.io').toString();
+const canonical = new URL(Astro.url.pathname, Astro.site ?? `https://${SITE.domain}`).toString();
+const ogImage = new URL(`${base}og.jpg`, Astro.site ?? `https://${SITE.domain}`).toString();
 const ogLocale = lang === 'fr' ? 'fr_FR' : 'en_US';
 const ogLocaleAlt = lang === 'fr' ? 'en_US' : 'fr_FR';
+const skipLabel = lang === 'fr' ? 'Aller au contenu' : 'Skip to content';
 ---
 <!doctype html>
-<html lang={lang}>
+<html lang={lang} data-theme="nuit">
   <head>
     <meta charset="UTF-8" />
+    {/* Le thème doit être posé AVANT le premier rendu, sinon on verrait la nuit
+        une fraction de seconde avant que le jour s'installe. D'où ce script en
+        ligne, volontairement minuscule et sans dépendance. */}
+    <script is:inline>
+      (function () {
+        try {
+          var choix = localStorage.getItem('skycobra-theme');
+          if (!choix) {
+            choix = window.matchMedia('(prefers-color-scheme: light)').matches
+              ? 'jour' : 'nuit';
+          }
+          document.documentElement.dataset.theme = choix;
+        } catch (e) {
+          /* localStorage inaccessible (navigation privée stricte) : on garde
+             la nuit, valeur déjà présente dans le HTML. */
+        }
+      })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <title>{title}</title>
@@ -28,7 +60,7 @@ const ogLocaleAlt = lang === 'fr' ? 'en_US' : 'fr_FR';
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="SkyCobra" />
+    <meta property="og:site_name" content={SITE.name} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
@@ -43,7 +75,13 @@ const ogLocaleAlt = lang === 'fr' ? 'en_US' : 'fr_FR';
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
-    <meta name="twitter:creator" content="@SkyC0bra" />
+    <meta name="twitter:creator" content={SITE.twitter} />
+
+    <!-- Le décor couvre tout l'écran dès le premier rendu : on précharge celui
+         du thème de nuit, qui est le défaut. Celui de jour n'est chargé que si
+         le visiteur bascule — inutile de payer 154 Ko pour rien. -->
+    <link rel="preload" as="image" href={`${base}fond-nuit.webp`} type="image/webp" />
+    <link rel="preload" as="image" href={`${base}lanterne.webp`} type="image/webp" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -53,6 +91,30 @@ const ogLocaleAlt = lang === 'fr' ? 'en_US' : 'fr_FR';
     />
   </head>
   <body>
+    <a class="skip-link" href="#main">{skipLabel}</a>
+    <Lantern lang={lang} />
+    <SiteNav lang={lang} langSwitchHref={langSwitchHref} current={current} />
     <slot />
+    <SiteFooter lang={lang} />
+
+    <script is:inline>
+      (function () {
+        var btn = document.querySelector('[data-lantern]');
+        if (!btn) return;
+        var root = document.documentElement;
+
+        function refleter() {
+          btn.setAttribute('aria-pressed', String(root.dataset.theme === 'nuit'));
+        }
+        refleter();
+
+        btn.addEventListener('click', function () {
+          var suivant = root.dataset.theme === 'nuit' ? 'jour' : 'nuit';
+          root.dataset.theme = suivant;
+          refleter();
+          try { localStorage.setItem('skycobra-theme', suivant); } catch (e) {}
+        });
+      })();
+    </script>
   </body>
 </html>

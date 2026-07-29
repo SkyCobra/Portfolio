@@ -12,9 +12,6 @@ interface Props {
 const { lang } = Astro.props;
 const t = I18N[lang];
 
-const base = import.meta.env.BASE_URL;
-const otherLangHref = lang === 'fr' ? `${base}en/` : base;
-
 // Hide empty sections — they'll reappear automatically when populated.
 const ALL_SECTIONS = [
   { key: 'students',  tilt: -0.4, list: GAMES.students  },
@@ -23,8 +20,8 @@ const ALL_SECTIONS = [
 ] as const;
 const sections = ALL_SECTIONS.filter((s) => s.list.length > 0);
 ---
-<main class="board">
-  <Header lang={lang} langSwitchHref={otherLangHref} />
+<main id="main" class="board">
+  <Header lang={lang} />
 
   {sections.map((s) => (
     <section class="section">
@@ -42,10 +39,6 @@ const sections = ALL_SECTIONS.filter((s) => s.list.length > 0);
     </section>
   ))}
 
-  <footer class="page-footer body-italic">
-    <span>© {new Date().getFullYear()} SkyCobra · </span>
-    <a href="https://skycobra.itch.io" target="_blank" rel="noopener">skycobra.itch.io</a>
-  </footer>
 </main>
 
 <style>

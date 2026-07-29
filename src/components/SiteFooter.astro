@@ -1,0 +1,107 @@
+---
+import { SITE, I18N, type Lang } from '../data/portfolio';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = I18N[lang];
+
+const links = [
+  { href: SITE.linkedin, label: 'LinkedIn' },
+  { href: SITE.github, label: 'GitHub' },
+  { href: SITE.itch, label: 'Itch.io' },
+];
+---
+<footer class="site-footer">
+  <div class="inner">
+    <p class="identity">
+      <span class="cinzel name">{SITE.name}</span>
+      <span class="owner">{SITE.owner}</span>
+    </p>
+
+    <ul class="links">
+      {links.map((l) => (
+        <li><a href={l.href} target="_blank" rel="noopener">{l.label}</a></li>
+      ))}
+    </ul>
+  </div>
+
+  <p class="legal">
+    <span>© {new Date().getFullYear()} {SITE.name}</span>
+    <span aria-hidden="true">·</span>
+    <span>{t.home.rights}</span>
+  </p>
+</footer>
+
+<style>
+  .site-footer {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    padding: 40px var(--page-pad) 48px;
+    border-top: 1px solid var(--panel-border);
+    font-family: var(--font-ui);
+  }
+
+  .inner {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .identity {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 0;
+  }
+
+  .name {
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: var(--text-strong);
+  }
+
+  .owner {
+    font-size: 13px;
+    color: var(--text);
+  }
+
+  .links {
+    display: flex;
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 14px;
+  }
+
+  .links a {
+    color: var(--text);
+    border-bottom: 1px solid transparent;
+    padding-bottom: 2px;
+    transition: color 160ms ease, border-color 160ms ease;
+  }
+
+  .links a:hover {
+    color: var(--accent-on-bg);
+    border-bottom-color: var(--accent);
+  }
+
+  .legal {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 24px 0 0;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  @media (max-width: 600px) {
+    .inner { flex-direction: column; align-items: flex-start; gap: 20px; }
+  }
+</style>

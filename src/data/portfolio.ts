@@ -50,7 +50,7 @@ export const I18N = {
     emptyBody: 'Les prochaines aventures s’écrivent. Reviens bientôt — un grand parchemin attend d’être déroulé ici.',
     langToggle: 'EN',
     home: {
-      // ⚠️ À RÉDIGER — vidé volontairement. Aucun texte inventé ne doit partir en ligne.
+      // ⚠️ TO WRITE — deliberately emptied. No invented copy must ever ship.
       heroKicker: '[À RÉDIGER — accroche courte]',
       heroTitle: '[À RÉDIGER — phrase d’accueil principale]',
       heroBody: '[À RÉDIGER — deux phrases de présentation]',
@@ -70,7 +70,7 @@ export const I18N = {
       rights: 'Tous droits réservés.',
     },
     about: {
-      // ⚠️ À RÉDIGER
+      // ⚠️ TO WRITE
       title: 'À propos',
       lead: '[À RÉDIGER — qui tu es, en deux phrases]',
       pathTitle: 'Parcours',
@@ -160,7 +160,7 @@ export const SITE = {
   name: 'SkyCobra Studio',
   owner: 'Romain Castel',
   domain: 'skycobra-studio.com',
-  // ⚠️ NOT CONFIRMED — invented from the OVH MX records. Romain must supply the real one.
+  // ⚠️ NOT CONFIRMED — inferred from the OVH MX records. Must be replaced.
   email: '[À RENSEIGNER — adresse e-mail]',
   linkedin: 'https://www.linkedin.com/in/romain-castel/',
   github: 'https://github.com/SkyCobra',
@@ -203,8 +203,8 @@ export interface Service {
   tools: string[];
 }
 
-// ⚠️ VIDÉ — trois emplacements pour montrer la structure. Le nombre de services et
-// leur découpage sont à décider par Romain, ce ne sont pas des propositions.
+// ⚠️ EMPTIED — three slots, just to show the structure. How many services there
+// are and how they are split is the owner's call; these are not suggestions.
 export const SERVICES: Service[] = [
   {
     id: 'service-1',
@@ -245,7 +245,7 @@ export interface CurrentWork {
   tools: string[];
 }
 
-// Title confirmed by Romain; everything else still to be supplied.
+// Title confirmed by the owner; everything else still to be supplied.
 export const CURRENT: CurrentWork = {
   id: 'adventure-haven',
   title: 'Adventure Haven',
@@ -268,8 +268,8 @@ export interface ProWork {
   videos: string[];
 }
 
-// ⚠️ Client name confirmed by Romain. Wording still to be written — and to be
-// cleared with his former employer before anything goes public.
+// ⚠️ Client name confirmed. Wording still to be written — and to be cleared
+// with the former employer before anything goes public.
 export const PRO: ProWork[] = [
   {
     id: 'mimbus',

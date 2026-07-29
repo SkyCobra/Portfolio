@@ -39,8 +39,8 @@ const home = lang === 'fr' ? '/' : '/en/';
 </nav>
 
 <style>
-  /* La navigation est posée sur la poutre du décor, sombre dans les deux
-     thèmes — son texte reste donc clair, sans basculer avec le reste. */
+  /* The nav sits on the artwork's beam, dark in both themes — so its text
+     stays light and does not flip with the rest of the page. */
   .site-nav {
     position: relative;
     display: flex;
@@ -53,8 +53,8 @@ const home = lang === 'fr' ? '/' : '/en/';
     padding: 22px var(--page-pad) 0;
   }
 
-  /* Le voile déborde volontairement du conteneur centré : la poutre traverse
-     tout l'écran, le voile doit en faire autant. */
+  /* The scrim deliberately overflows the centred container: the beam spans the
+     full screen, so the scrim must too. */
   .site-nav::before {
     content: '';
     position: absolute;

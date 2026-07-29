@@ -11,9 +11,9 @@ const label = lang === 'fr'
   ? 'Allumer ou éteindre la lanterne'
   : 'Turn the lantern on or off';
 ---
-{/* Le halo est un frère de la lanterne, pas un enfant : il doit passer sous le
-    contenu (z-index négatif), ce qu'un descendant d'un élément positionné ne
-    pourrait pas faire. */}
+{/* The halo is a sibling of the lantern, not a child: it must sit under the
+    content (negative z-index), which a descendant of a positioned element
+    could not do. */}
 <div class="lantern-halo" aria-hidden="true"></div>
 
 <button class="lantern" type="button" data-lantern aria-pressed="true" title={label}>

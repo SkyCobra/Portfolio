@@ -31,24 +31,27 @@ const ogLocaleAlt = lang === 'fr' ? 'en_US' : 'fr_FR';
 const skipLabel = lang === 'fr' ? 'Aller au contenu' : 'Skip to content';
 ---
 <!doctype html>
-<html lang={lang} data-theme="nuit">
+<html lang={lang} data-theme="night">
   <head>
     <meta charset="UTF-8" />
-    {/* Le thème doit être posé AVANT le premier rendu, sinon on verrait la nuit
-        une fraction de seconde avant que le jour s'installe. D'où ce script en
-        ligne, volontairement minuscule et sans dépendance. */}
+    {/* The theme must be applied BEFORE first paint, otherwise night would show
+        for a fraction of a second before day settles in. Hence this inline
+        script — deliberately tiny and dependency-free. */}
     <script is:inline>
       (function () {
         try {
-          var choix = localStorage.getItem('skycobra-theme');
-          if (!choix) {
-            choix = window.matchMedia('(prefers-color-scheme: light)').matches
-              ? 'jour' : 'nuit';
+          var stored = localStorage.getItem('skycobra-theme');
+          /* Only two values are valid. Anything else — a stale key from an
+             earlier naming, a hand-edited entry — falls back to the system
+             preference rather than being applied verbatim. */
+          if (stored !== 'night' && stored !== 'day') {
+            stored = window.matchMedia('(prefers-color-scheme: light)').matches
+              ? 'day' : 'night';
           }
-          document.documentElement.dataset.theme = choix;
+          document.documentElement.dataset.theme = stored;
         } catch (e) {
-          /* localStorage inaccessible (navigation privée stricte) : on garde
-             la nuit, valeur déjà présente dans le HTML. */
+          /* localStorage unavailable (strict private browsing): keep night,
+             the value already present in the HTML. */
         }
       })();
     </script>
@@ -77,11 +80,11 @@ const skipLabel = lang === 'fr' ? 'Aller au contenu' : 'Skip to content';
     <meta name="twitter:image" content={ogImage} />
     <meta name="twitter:creator" content={SITE.twitter} />
 
-    <!-- Le décor couvre tout l'écran dès le premier rendu : on précharge celui
-         du thème de nuit, qui est le défaut. Celui de jour n'est chargé que si
-         le visiteur bascule — inutile de payer 154 Ko pour rien. -->
-    <link rel="preload" as="image" href={`${base}fond-nuit.webp`} type="image/webp" />
-    <link rel="preload" as="image" href={`${base}lanterne.webp`} type="image/webp" />
+    <!-- The artwork covers the whole screen from the first paint, so preload
+         the night one, which is the default. The day one is only fetched if the
+         visitor flips the lantern — no point paying 154 KB up front. -->
+    <link rel="preload" as="image" href={`${base}bg-night.webp`} type="image/webp" />
+    <link rel="preload" as="image" href={`${base}lantern.webp`} type="image/webp" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -103,16 +106,16 @@ const skipLabel = lang === 'fr' ? 'Aller au contenu' : 'Skip to content';
         if (!btn) return;
         var root = document.documentElement;
 
-        function refleter() {
-          btn.setAttribute('aria-pressed', String(root.dataset.theme === 'nuit'));
+        function syncPressed() {
+          btn.setAttribute('aria-pressed', String(root.dataset.theme === 'night'));
         }
-        refleter();
+        syncPressed();
 
         btn.addEventListener('click', function () {
-          var suivant = root.dataset.theme === 'nuit' ? 'jour' : 'nuit';
-          root.dataset.theme = suivant;
-          refleter();
-          try { localStorage.setItem('skycobra-theme', suivant); } catch (e) {}
+          var next = root.dataset.theme === 'night' ? 'day' : 'night';
+          root.dataset.theme = next;
+          syncPressed();
+          try { localStorage.setItem('skycobra-theme', next); } catch (e) {}
         });
       })();
     </script>

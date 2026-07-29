@@ -15,13 +15,13 @@
   --ink-line: rgba(31, 22, 12, 0.32);
   --ink-hair: rgba(31, 22, 12, 0.18);
 
-  /* Pierre et lierre — échantillonnés directement dans l'illustration de fond,
-     pour que les surfaces de l'interface appartiennent au même monde qu'elle. */
-  --stone-1: #3a3733;   /* pierre éclairée */
-  --stone-2: #292622;   /* pierre en ombre — montants de l'arche */
-  --stone-3: #171b1f;   /* ombre profonde sous la voûte */
-  --ivy:     #131d17;   /* feuillage */
-  --amber:   #674f34;   /* lumière chaude au fond du passage */
+  /* Stone and ivy — sampled straight from the background illustration, so the
+     interface surfaces belong to the same world as the artwork. */
+  --stone-1: #3a3733;   /* lit stone */
+  --stone-2: #292622;   /* stone in shadow */
+  --stone-3: #171b1f;   /* deep shadow */
+  --ivy:     #131d17;   /* foliage */
+  --amber:   #674f34;   /* warm light */
 
   /* Wax */
   --wax: #a13a2a;
@@ -40,7 +40,7 @@
   --page-max: 1180px;
   --page-pad: 40px;
 
-  /* Chaîne de la lanterne, en masque SVG — voir `.lantern .chain`. */
+  /* Lantern chain, as an SVG mask — see `.lantern .chain`. */
   --chain-svg: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214%22%20height%3D%2222%22%20viewBox%3D%220%200%2014%2022%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-width%3D%221.9%22%3E%3Cellipse%20cx%3D%227%22%20cy%3D%22-5.5%22%20rx%3D%222.1%22%20ry%3D%226.4%22%2F%3E%3Cellipse%20cx%3D%227%22%20cy%3D%225.5%22%20rx%3D%224.6%22%20ry%3D%226.4%22%2F%3E%3Cellipse%20cx%3D%227%22%20cy%3D%2216.5%22%20rx%3D%222.1%22%20ry%3D%226.4%22%2F%3E%3Cellipse%20cx%3D%227%22%20cy%3D%2227.5%22%20rx%3D%224.6%22%20ry%3D%226.4%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
 }
 
@@ -48,24 +48,23 @@
 @media (max-width: 600px) { :root { --page-pad: 16px; } }
 
 /* ════════════════════════════════════════════════════════════════════════════
-   JETONS DE THÈME — jour / nuit
+   THEME TOKENS — day / night
    ────────────────────────────────────────────────────────────────────────────
-   La lanterne bascule `data-theme` sur <html>. Tout ce qui change de couleur
-   passe par les jetons ci-dessous : aucun composant ne doit écrire une couleur
-   en dur, sinon il resterait figé dans un seul thème.
+   The lantern flips `data-theme` on <html>. Every colour that changes goes
+   through the tokens below: no component may hard-code one, or it would stay
+   frozen in a single theme.
 
-   Les opacités de voile ne sont pas choisies à l'œil — elles viennent d'une
-   mesure sur les images : sans voile la nuit (11,4:1), 15 % de crème le jour
-   (4,8:1), le lierre des bords étant trop sombre pour du texte foncé.
+   Scrim opacities are measured, not eyeballed — each comes from a contrast
+   computation on the actual image, at the worst spot of the area it covers.
    ════════════════════════════════════════════════════════════════════════════ */
 
 :root,
-html[data-theme='nuit'] {
-  --bg-image: url('/fond-nuit.webp');
+html[data-theme='night'] {
+  --bg-image: url('/bg-night.webp');
   --bg-fallback: #253847;
-  /* La nuit est DÉRIVÉE du jour par édition guidée, donc plus claire qu'une
-     nuit générée seule : elle lit « crépuscule ». Ce voile la ramène vers la
-     nuit et remonte le contraste de 5,9:1 à 7,8:1. */
+  /* Night is DERIVED from day by guided editing, so it is lighter than a
+     separately generated night — it reads as dusk. This scrim pulls it back
+     towards night and lifts contrast from 5.9:1 to 7.8:1. */
   --scrim: rgba(0, 0, 0, 0.20);
 
   --text-strong: var(--parchment-1);
@@ -81,21 +80,21 @@ html[data-theme='nuit'] {
   --tag-bg:     rgba(255, 255, 255, 0.04);
 
   --chain: #9b8b63;
-  --feu: 1;              /* 1 = lanterne allumée */
+  --flame-on: 1;              /* 1 = lantern lit */
 
-  /* Détachement du texte posé à même le décor. La nuit, une ombre noire fait
-     ressortir un texte clair. Le jour, elle ne ferait qu'empâter un texte
-     sombre — d'où un halo clair, qui joue le même rôle en s'inversant. */
-  --halo-fort: 0 2px 10px rgba(0, 0, 0, 0.55);
-  --halo-doux: 0 1px 3px rgba(0, 0, 0, 0.7);
+  /* Lifting text that sits directly on the artwork. At night a black shadow
+     detaches light text. In day it would only muddy dark text — hence a light
+     halo, which plays the same role inverted. */
+  --text-halo-strong: 0 2px 10px rgba(0, 0, 0, 0.55);
+  --text-halo-soft: 0 1px 3px rgba(0, 0, 0, 0.7);
 
-  /* Accent posé à même le décor — page courante, chiffres, survols.
-     Le crème pâle ne vaut que sur mur sombre : sur le mur clair du jour il
-     tombe à 1:1, donc invisible. Il lui faut un pendant foncé. */
+  /* Accent sitting on the artwork — current page, figures, hovers.
+     The pale cream only works on a dark wall: on the day wall it drops to
+     1:1, i.e. invisible. It needs a dark counterpart. */
   --accent-on-bg: var(--accent-soft);
 
-  /* La plaque du tableau. C'était le dernier élément figé sur un seul thème —
-     un bloc de pierre sombre posé sur un mur en plein jour trouait la page. */
+  /* The board plaque. It was the last element frozen in a single theme — a
+     dark stone slab on a sunlit wall punched a hole in the page. */
   --plaque-bg: linear-gradient(180deg, var(--stone-1) 0%, var(--stone-2) 55%, #1d1a17 100%);
   --plaque-edge: #14120f;
   --plaque-title: #fbeec4;
@@ -104,19 +103,19 @@ html[data-theme='nuit'] {
   --plaque-pitch: var(--parchment-1);
   --plaque-drop: 0 10px 26px rgba(0, 0, 0, 0.6);
 
-  /* La navigation est posée sur la POUTRE, pas sur le mur — et une poutre reste
-     sombre même en plein jour. Son texte reste donc clair dans les deux thèmes.
-     La nuit la poutre est quasi noire (11,9:1), aucun voile n'est nécessaire. */
+  /* The nav sits on the BEAM, not on the wall — and a beam stays dark even in
+     daylight. Its text therefore stays light in both themes. At night the beam
+     is nearly black (11.9:1), so no scrim is needed. */
   --nav-scrim: transparent;
 }
 
-html[data-theme='jour'] {
-  --bg-image: url('/fond-jour.webp');
+html[data-theme='day'] {
+  --bg-image: url('/bg-day.webp');
   --bg-fallback: #ad9e7c;
   --scrim: rgba(250, 246, 238, 0.15);
 
-  /* Texte plus appuyé que la simple transposition : sur un mur clair et
-     texturé, l'encre moyenne manquait de présence. */
+  /* Heavier than a straight transposition: on a light, textured wall the mid
+     ink lacked presence. */
   --text-strong: var(--ink-1);
   --text:        var(--ink-2);
   --text-muted:  var(--ink-3);
@@ -130,15 +129,15 @@ html[data-theme='jour'] {
   --tag-bg:     rgba(255, 255, 255, 0.35);
 
   --chain: #6b5c3c;
-  --feu: 0;
+  --flame-on: 0;
 
-  /* Halo clair au lieu d'une ombre : c'est lui qui détache l'encre du mur. */
-  --halo-fort: 0 1px 8px rgba(255, 252, 244, 0.9), 0 0 2px rgba(255, 252, 244, 0.8);
-  --halo-doux: 0 1px 4px rgba(255, 252, 244, 0.85);
+  /* Light halo instead of a shadow — this is what lifts the ink off the wall. */
+  --text-halo-strong: 0 1px 8px rgba(255, 252, 244, 0.9), 0 0 2px rgba(255, 252, 244, 0.8);
+  --text-halo-soft: 0 1px 4px rgba(255, 252, 244, 0.85);
 
   --accent-on-bg: var(--accent-deep);
 
-  /* Pierre éclairée — teintes relevées sur les blocs ensoleillés du décor. */
+  /* Sunlit stone — tints sampled from the lit blocks of the artwork. */
   --plaque-bg: linear-gradient(180deg, #ded5be 0%, #cabfa4 55%, #b3a88c 100%);
   --plaque-edge: #8d8168;
   --plaque-title: var(--ink-1);
@@ -147,9 +146,9 @@ html[data-theme='jour'] {
   --plaque-pitch: var(--ink-2);
   --plaque-drop: 0 8px 22px rgba(60, 48, 30, 0.28);
 
-  /* Le jour, la poutre est un TON MOYEN (luminance 0,232) : ni le texte clair
-     (2,1:1) ni le texte sombre (2,3:1) n'y passent. Le seul remède est
-     d'assombrir le fond — ce voile ramène le texte clair au-dessus de 6:1. */
+  /* In day the beam is a MID TONE (luminance 0.232): neither light text
+     (2.1:1) nor dark text (2.3:1) clears AA on it. The only remedy is to darken
+     the background — this scrim brings light text back above 6:1. */
   --nav-scrim: linear-gradient(180deg,
     rgba(24, 20, 14, 0.62) 0%,
     rgba(24, 20, 14, 0.40) 62%,
@@ -169,17 +168,17 @@ html, body {
 
 body {
   overflow-x: hidden;
-  /* Repli affiché le temps que l'image charge : c'est la teinte moyenne du
-     fichier, donc aucun flash clair et le texte reste lisible d'emblée. */
+  /* Fallback shown while the image loads: the file's average tone, so there is
+     no bright flash and text stays readable from the first paint. */
   background-color: var(--bg-fallback);
   transition: background-color 550ms ease;
 }
 
-/* Le décor est porté par un pseudo-élément fixé au viewport plutôt que par
-   `background-attachment: fixed`, qu'iOS Safari ne gère pas correctement.
-   Deux conséquences utiles : la surface à rastériser reste celle de l'écran,
-   et le rendu ne dépend plus de la hauteur de la page — c'est ce qui faisait
-   varier l'ancien fond en dégradés d'une page à l'autre. */
+/* The artwork is carried by a viewport-fixed pseudo-element rather than by
+   `background-attachment: fixed`, which iOS Safari handles badly. Two useful
+   consequences: the raster area stays screen-sized, and the render no longer
+   depends on page height — which is what made the old gradient background
+   differ from page to page. */
 body::before {
   content: '';
   position: fixed;
@@ -191,8 +190,8 @@ body::before {
   background-repeat: no-repeat;
 }
 
-/* Le voile, entre décor et contenu. C'est lui qui garantit le contraste :
-   son opacité vient d'une mesure, pas d'un réglage à l'œil. */
+/* The scrim, between artwork and content. It is what guarantees contrast:
+   its opacity comes from a measurement, not from an eyeball adjustment. */
 body::after {
   content: '';
   position: fixed;
@@ -242,12 +241,12 @@ a { color: inherit; text-decoration: none; }
     radial-gradient(ellipse at 30% 20%, var(--parchment-1) 0%, var(--parchment-2) 65%, var(--parchment-3) 100%);
 }
 
-/* Surface de panneau — pierre sombre translucide.
-   Employée par les sections sobres (accueil, à propos), là où un grand aplat de
-   parchemin masquerait l'illustration. Le parchemin reste réservé aux affiches
-   de quête, où il porte un sens.
-   La translucidité n'est pas décorative : en assombrissant ce qu'il y a dessous,
-   elle garantit le contraste du texte clair même au-dessus de la zone ambrée. */
+/* Panel surface — translucent dark stone.
+   Used by the sober sections (home, about), where a large parchment slab would
+   mask the illustration. Parchment stays reserved for quest posters, where it
+   carries meaning.
+   The translucency is not decorative: by darkening whatever sits underneath, it
+   guarantees text contrast even over the brightest part of the artwork. */
 .stone-panel {
   background-color: var(--panel-bg);
   border: 1px solid var(--panel-border);
@@ -256,7 +255,7 @@ a { color: inherit; text-decoration: none; }
   transition: background-color 550ms ease, border-color 550ms ease;
 }
 
-/* Texte posé sur .stone-panel. */
+/* Text sitting on .stone-panel. */
 .on-stone         { color: var(--panel-text); }
 .on-stone-strong  { color: var(--panel-head); }
 .on-stone-muted   { color: var(--text-muted); }
@@ -269,13 +268,12 @@ a { color: inherit; text-decoration: none; }
 .body-italic { font-family: 'Lora', Georgia, serif; font-style: italic; font-weight: 500; }
 
 /* ════════════════════════════════════════════════════════════════════════════
-   LA LANTERNE — commande du thème
+   THE LANTERN — theme control
    ────────────────────────────────────────────────────────────────────────────
-   Placée en haut à droite, sous la barre de navigation : sur écran large elle
-   tombe dans la marge, hors du contenu limité à 1180 px.
-   `isolation: isolate` confine la fusion additive du bloom à la lanterne ;
-   sans elle, il se mélangerait aussi au décor.
-   ════════════════════════════════════════════════════════════════════════════ */
+   Top right, below the nav bar: on a wide screen it falls in the margin, clear
+   of the 1180 px content column.
+   `isolation: isolate` confines the bloom's additive blending to the lantern;
+   without it, the blend would also pick up the artwork behind. */
 
 .lantern {
   position: fixed;
@@ -292,10 +290,10 @@ a { color: inherit; text-decoration: none; }
   isolation: isolate;
 }
 
-/* Chaîne à maillons alternés — un de face, un de profil. Le SVG sert de MASQUE
-   et non d'image : la couleur vient du jeton, donc la chaîne suit le thème.
-   Les maillons qui débordent de la tuile sont dessinés dans le SVG, sinon la
-   répétition laisserait une couture visible tous les 22 px. */
+/* Chain of alternating links — one face on, one edge on. The SVG is a MASK,
+   not an image: the colour comes from the token, so the chain follows the
+   theme. Links that overflow the tile are drawn explicitly in the SVG,
+   otherwise the vertical repeat would show a seam every 22 px. */
 .lantern .chain {
   position: absolute;
   left: 50%;
@@ -315,8 +313,8 @@ a { color: inherit; text-decoration: none; }
   transition: background-color 550ms ease;
 }
 
-/* Mesuré sur l'image : globe de 36,4 % à 73,1 %, mèche à 73,1 %.
-   Le verre étant à 10 % d'opacité, la flamme se place DERRIÈRE et transparaît. */
+/* Measured on the image: globe spans 36.4 % to 73.1 %, wick at 73.1 %.
+   With the glass at 10 % opacity, the flame sits BEHIND and shows through. */
 .lantern .flame {
   position: absolute;
   left: 50%;
@@ -324,7 +322,7 @@ a { color: inherit; text-decoration: none; }
   width: 26%;
   height: 29%;
   transform: translateX(-50%);
-  transform-origin: bottom center;   /* elle danse par la pointe, pas par la base */
+  transform-origin: bottom center;   /* it dances at the tip, not at the base */
   border-radius: 50% 50% 46% 46%;
   pointer-events: none;
   z-index: 0;
@@ -335,7 +333,7 @@ a { color: inherit; text-decoration: none; }
     rgba(255, 172, 58, 0.72) 64%,
     rgba(255, 132, 30, 0.32) 82%,
     transparent 94%);
-  opacity: var(--feu);
+  opacity: var(--flame-on);
   animation: flame 3.4s ease-in-out infinite;
   transition: opacity 550ms ease;
 }
@@ -354,14 +352,14 @@ a { color: inherit; text-decoration: none; }
     rgba(255, 198, 96, 0.85) 0%,
     rgba(255, 170, 70, 0.35) 45%,
     transparent 72%);
-  opacity: var(--feu);
+  opacity: var(--flame-on);
   animation: inner-glow 4.1s ease-in-out infinite;
   transition: opacity 550ms ease;
 }
 
-/* La lumière qui accroche la SURFACE du verre — devant le corps, en fusion
-   additive. Un objet simplement posé derrière une vitre n'a aucune raison de
-   la faire briller ; c'est cette couche qui donne la sensation de brillance. */
+/* Light catching the SURFACE of the glass — in front of the body, additive.
+   An object merely placed behind a pane has no reason to make it glow; this
+   layer is what produces that sense of brightness. */
 .lantern .bloom {
   position: absolute;
   left: 50%;
@@ -378,7 +376,7 @@ a { color: inherit; text-decoration: none; }
     rgba(255, 198, 96, 0.28) 38%,
     rgba(255, 170, 70, 0.10) 62%,
     transparent 80%);
-  opacity: var(--feu);
+  opacity: var(--flame-on);
   animation: inner-glow 4.1s ease-in-out infinite;
   transition: opacity 550ms ease;
 }
@@ -387,17 +385,17 @@ a { color: inherit; text-decoration: none; }
   position: absolute;
   inset: 0;
   z-index: 1;
-  background-image: url('/lanterne.webp');
+  background-image: url('/lantern.webp');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: top center;
-  filter: drop-shadow(0 0 calc(var(--feu) * 16px) rgba(255, 186, 84, 0.6));
+  filter: drop-shadow(0 0 calc(var(--flame-on) * 16px) rgba(255, 186, 84, 0.6));
   transition: filter 550ms ease;
 }
 
-/* Le halo projeté sur le mur — la lumière que la lampe jette autour d'elle.
-   Le décor n'ayant plus de lanterne peinte, c'est la seule source chaude de la
-   page : l'éteindre refroidit réellement la pièce. */
+/* The halo cast on the wall — the light the lamp throws around itself.
+   Since the artwork no longer has a painted lantern, this is the page's only
+   warm source: turning it off genuinely cools the room. */
 .lantern-halo {
   position: fixed;
   top: -190px;
@@ -412,14 +410,13 @@ a { color: inherit; text-decoration: none; }
     rgba(255, 170, 70, 0.13) 34%,
     rgba(255, 150, 60, 0.05) 56%,
     transparent 73%);
-  opacity: var(--feu);
+  opacity: var(--flame-on);
   animation: lantern-halo 4.7s ease-in-out infinite;
   transition: opacity 550ms ease;
 }
 
-/* Trois durées volontairement non multiples — 3,4 / 4,1 / 4,7 s. Les cycles ne
-   se resynchronisent jamais, sans quoi le vacillement paraîtrait mécanique.
-   Même principe que les périodes premières entre elles des anciennes veines. */
+/* Three deliberately non-multiple durations — 3.4 / 4.1 / 4.7 s. The cycles
+   never resynchronise; without that, the flicker would read as mechanical. */
 @keyframes flame {
   0%   { transform: translateX(-50%) scale(1, 1)       rotate(0deg); }
   11%  { transform: translateX(-50%) scale(.94, .88)   rotate(-2.5deg); }
@@ -431,11 +428,11 @@ a { color: inherit; text-decoration: none; }
   100% { transform: translateX(-50%) scale(1, 1)       rotate(0deg); }
 }
 @keyframes inner-glow {
-  0%, 100% { opacity: var(--feu); }
-  22% { opacity: calc(var(--feu) * .72); }
-  47% { opacity: calc(var(--feu) * .96); }
-  68% { opacity: calc(var(--feu) * .78); }
-  85% { opacity: calc(var(--feu) * .92); }
+  0%, 100% { opacity: var(--flame-on); }
+  22% { opacity: calc(var(--flame-on) * .72); }
+  47% { opacity: calc(var(--flame-on) * .96); }
+  68% { opacity: calc(var(--flame-on) * .78); }
+  85% { opacity: calc(var(--flame-on) * .92); }
 }
 @keyframes lantern-halo {
   0%, 100% { transform: scale(1); }
@@ -446,10 +443,10 @@ a { color: inherit; text-decoration: none; }
   86% { transform: scale(.982); }
 }
 
-/* Gamut étendu. Le vrai HDR n'est pas exploitable de façon fiable en CSS
-   aujourd'hui ; display-p3 l'est. Sur un écran P3, les oranges et jaunes — la
-   gamme exacte d'une flamme — gagnent nettement en saturation. Ailleurs, le
-   navigateur retombe sur les règles sRGB ci-dessus sans rien casser. */
+/* Wide gamut. True HDR is not reliably usable in CSS today; display-p3 is.
+   On a P3 screen the oranges and yellows — exactly a flame's range — gain
+   noticeably in saturation. Elsewhere the browser falls back to the sRGB rules
+   above with nothing broken. */
 @supports (color: color(display-p3 1 1 1)) {
   .lantern .flame {
     background: radial-gradient(ellipse at 50% 76%,
@@ -507,8 +504,8 @@ a { color: inherit; text-decoration: none; }
   .empty {
     transform: none !important;
   }
-  /* Le vacillement de la flamme est un agrément, jamais une information :
-     la lanterne reste parfaitement lisible allumée comme éteinte. */
+  /* The flicker is an embellishment, never information: the lantern stays
+     perfectly legible lit or unlit. */
   .lantern .flame,
   .lantern .inner-glow,
   .lantern .bloom,

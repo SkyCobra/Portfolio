@@ -23,7 +23,7 @@ const stats = [
 ];
 ---
 <main id="main" class="home">
-  <!-- ── HERO — le texte est posé à même l'illustration, sans panneau. -->
+  <!-- ── HERO — text sits directly on the artwork, with no panel. -->
   <section class="hero">
     <p class="kicker mono">{h.heroKicker}</p>
     <h1 class="cinzel">{h.heroTitle}</h1>
@@ -170,7 +170,7 @@ const stats = [
     font-weight: 600;
     letter-spacing: 0.005em;
     color: var(--text-strong);
-    text-shadow: var(--halo-fort);
+    text-shadow: var(--text-halo-strong);
   }
 
   .lead {
@@ -253,7 +253,7 @@ const stats = [
     font-weight: 600;
     letter-spacing: 0.03em;
     color: var(--text-strong);
-    text-shadow: var(--halo-fort);
+    text-shadow: var(--text-halo-strong);
   }
 
   .band-lead {
@@ -274,9 +274,8 @@ const stats = [
 
   /* ── PANELS — parchment surface, neutral type. Material themed, structure not. */
 
-  /* La bordure et le fond viennent de .stone-panel (global.css) — on ne les
-     redéclare pas ici, sinon la spécificité des styles scopés d'Astro les
-     écraserait. */
+  /* Border and background come from .stone-panel (global.css) — do not
+     redeclare them here, or Astro's scoped-style specificity would win. */
   .panel {
     padding: 26px 26px 24px;
     border-radius: 3px;

@@ -1,5 +1,5 @@
 ---
-import { SITE, NAV, I18N, localizeHref, type Lang } from '../data/portfolio';
+import { SITE, NAV, I18N, localizeHref, withBase, type Lang } from '../data/portfolio';
 
 interface Props {
   lang: Lang;
@@ -11,7 +11,10 @@ interface Props {
 
 const { lang, langSwitchHref, current } = Astro.props;
 const t = I18N[lang];
-const home = lang === 'fr' ? '/' : '/en/';
+// The pages pass raw paths; prefixing happens here so there is a single place
+// that knows about the deploy base.
+const home = withBase(lang === 'fr' ? '/' : '/en/');
+const otherLang = withBase(langSwitchHref);
 ---
 <nav class="site-nav" aria-label={lang === 'fr' ? 'Navigation principale' : 'Main navigation'}>
   <a class="wordmark cinzel" href={home}>
@@ -31,7 +34,7 @@ const home = lang === 'fr' ? '/' : '/en/';
       );
     })}
     <li class="lang">
-      <a href={langSwitchHref} lang={lang === 'fr' ? 'en' : 'fr'}>
+      <a href={otherLang} lang={lang === 'fr' ? 'en' : 'fr'}>
         <span class="mono">{t.langToggle}</span>
       </a>
     </li>

@@ -50,34 +50,41 @@ export const I18N = {
     emptyBody: 'Les prochaines aventures s’écrivent. Reviens bientôt — un grand parchemin attend d’être déroulé ici.',
     langToggle: 'EN',
     home: {
-      // ⚠️ TO WRITE — deliberately emptied. No invented copy must ever ship.
-      heroKicker: '[À RÉDIGER — accroche courte]',
-      heroTitle: '[À RÉDIGER — phrase d’accueil principale]',
-      heroBody: '[À RÉDIGER — deux phrases de présentation]',
+      // Hierarchy: the brand is already in the nav and the role is in the
+      // kicker, so the title carries the name. A short H1 also stops the hero
+      // wrapping onto three lines at 52px, which flattened everything below it.
+      heroKicker: 'Développeur indépendant · XR & jeu vidéo',
+      heroTitle: 'Romain Castel',
+      heroBody:
+        'Je développe des expériences immersives, de la simulation métier au jeu. Bientôt dix ans sur Unity, dont plusieurs années sur des simulateurs de formation en réalité virtuelle — aujourd’hui à mon compte, et ouvert aux projets qui demandent autant de rigueur technique que de soin apporté au ressenti.',
       ctaProjects: 'Voir les projets',
       ctaContact: 'Me contacter',
       servicesTitle: 'Ce que je fais',
-      servicesLead: '[À RÉDIGER — une ligne d’introduction]',
+      servicesLead: 'Trois manières d’intervenir, selon le besoin.',
       currentTitle: 'En ce moment',
       proTitle: 'Travaux professionnels',
-      proLead: '[À RÉDIGER]',
+      proLead: 'Réalisations menées en contexte client.',
       featuredTitle: 'Projets marquants',
-      featuredLead: '[À RÉDIGER]',
+      featuredLead: 'Trois projets, trois compétences différentes.',
       allProjects: 'Tous les projets',
-      contactTitle: '[À RÉDIGER — titre de la section contact]',
-      contactBody: '[À RÉDIGER — invitation à te contacter]',
+      contactTitle: 'Un projet, une question ?',
+      contactBody:
+        'Écrivez-moi en quelques lignes : le contexte, et l’échéance si vous en avez une. Je réponds sous 48 heures — même quand c’est pour dire que ce n’est pas pour moi.',
       contactEmail: 'Envoyer un e-mail',
       rights: 'Tous droits réservés.',
     },
     about: {
-      // ⚠️ TO WRITE
       title: 'À propos',
-      lead: '[À RÉDIGER — qui tu es, en deux phrases]',
+      lead:
+        'Je m’appelle Romain Castel. Je développe des jeux et des applications immersives depuis bientôt dix ans, aujourd’hui à mon compte sous le nom SkyCobra Studio.',
       pathTitle: 'Parcours',
-      pathBody: '[À RÉDIGER — ton parcours]',
+      // ⚠️ Two facts still missing: graduation year and the Mimbus period.
+      pathBody:
+        'Diplômé d’Epitech en [ANNÉE], j’ai passé [PÉRIODE] à développer des simulateurs de formation en réalité virtuelle avant de me lancer en indépendant. Entre-temps, une quinzaine de jeux — projets étudiants, game jams, prototypes personnels — qui m’ont appris à livrer vite sans sacrifier la finition.',
       skillsTitle: 'Compétences',
       approachTitle: 'Façon de travailler',
-      approachBody: '[À RÉDIGER — ta méthode]',
+      approachBody:
+        'Je préfère montrer un prototype jouable qu’un document de spécifications. Tester tôt, sur le casque quand il s’agit de VR, corriger, recommencer : c’est ce qui évite les mauvaises surprises en fin de production.',
     },
   },
   en: {
@@ -98,32 +105,38 @@ export const I18N = {
     emptyBody: 'New adventures are being written. Check back soon — a grand scroll waits to be unrolled here.',
     langToggle: 'FR',
     home: {
-      heroKicker: '[TO WRITE — short kicker]',
-      heroTitle: '[TO WRITE — main headline]',
-      heroBody: '[TO WRITE — two-sentence intro]',
+      heroKicker: 'Independent developer · XR & games',
+      heroTitle: 'Romain Castel',
+      heroBody:
+        'I build immersive experiences, from vocational simulation to games. Nearly ten years in Unity, several of them on virtual reality training simulators — now independent, and open to projects that demand as much technical rigour as care for how they feel.',
       ctaProjects: 'See the projects',
       ctaContact: 'Get in touch',
       servicesTitle: 'What I do',
-      servicesLead: '[TO WRITE]',
+      servicesLead: 'Three ways to step in, depending on the need.',
       currentTitle: 'Currently building',
       proTitle: 'Professional work',
-      proLead: '[TO WRITE]',
+      proLead: 'Projects delivered in a client context.',
       featuredTitle: 'Selected projects',
-      featuredLead: '[TO WRITE]',
+      featuredLead: 'Three projects, three different skills.',
       allProjects: 'All projects',
-      contactTitle: '[TO WRITE — contact section title]',
-      contactBody: '[TO WRITE — invitation to get in touch]',
+      contactTitle: 'A project, a question?',
+      contactBody:
+        'Send me a few lines: the context, and the deadline if you have one. I reply within 48 hours — including when the answer is that I am not the right fit.',
       contactEmail: 'Send an email',
       rights: 'All rights reserved.',
     },
     about: {
       title: 'About',
-      lead: '[TO WRITE — who you are, in two sentences]',
+      lead:
+        'My name is Romain Castel. I have been building games and immersive applications for nearly ten years, now independently under the name SkyCobra Studio.',
       pathTitle: 'Background',
-      pathBody: '[TO WRITE — your background]',
+      // ⚠️ Two facts still missing: graduation year and the Mimbus period.
+      pathBody:
+        'An Epitech graduate in [YEAR], I spent [PERIOD] building virtual reality training simulators before going independent. Along the way, some fifteen games — student projects, game jams, personal prototypes — taught me to ship fast without cutting corners on polish.',
       skillsTitle: 'Skills',
       approachTitle: 'How I work',
-      approachBody: '[TO WRITE — how you work]',
+      approachBody:
+        'I would rather show a playable prototype than a specification document. Test early, on the headset when it is VR, fix, repeat — that is what keeps the nasty surprises out of late production.',
     },
   },
 } as const;
@@ -188,10 +201,21 @@ const EN_ROUTES: Record<string, string> = {
   '/a-propos': '/en/about',
 };
 
+/** Prefix an internal path with the deploy base.
+ *
+ *  Production serves from the root, the internal preview from `/Portfolio/`.
+ *  Every internal link must go through here, or it 404s on the sub-path.
+ */
+export function withBase(path: string): string {
+  if (path.startsWith('#') || /^[a-z]+:/i.test(path)) return path;
+  const base = import.meta.env.BASE_URL;              // '/' or '/Portfolio/'
+  return (base.endsWith('/') ? base.slice(0, -1) : base) + path;
+}
+
 export function localizeHref(href: string, lang: Lang): string {
   if (href.startsWith('#')) return href;
-  if (lang === 'fr') return href;
-  return EN_ROUTES[href] ?? `/en${href}`;
+  const localized = lang === 'fr' ? href : (EN_ROUTES[href] ?? `/en${href}`);
+  return withBase(localized);
 }
 
 export interface Service {
@@ -203,32 +227,39 @@ export interface Service {
   tools: string[];
 }
 
-// ⚠️ EMPTIED — three slots, just to show the structure. How many services there
-// are and how they are split is the owner's call; these are not suggestions.
+// The three offerings the owner confirmed. Deliberately NOT included: rapid
+// prototyping and taking over existing projects — both were offered and declined,
+// so they must not creep back in.
 export const SERVICES: Service[] = [
   {
-    id: 'service-1',
-    titleFr: '[À RÉDIGER — service 1]',
-    titleEn: '[TO WRITE — service 1]',
-    bodyFr: '[À RÉDIGER]',
-    bodyEn: '[TO WRITE]',
-    tools: [],
+    id: 'xr',
+    titleFr: 'Applications XR & VR',
+    titleEn: 'XR & VR applications',
+    bodyFr:
+      'Conception et développement d’applications immersives sur casque — formation, simulation, outils métier. De l’ergonomie des interactions jusqu’au confort en session longue.',
+    bodyEn:
+      'Design and development of immersive headset applications — training, simulation, internal tools. From interaction ergonomics through to comfort over a long session.',
+    tools: ['Unity', 'XR Interaction Toolkit', 'Meta Quest', 'OpenXR'],
   },
   {
-    id: 'service-2',
-    titleFr: '[À RÉDIGER — service 2]',
-    titleEn: '[TO WRITE — service 2]',
-    bodyFr: '[À RÉDIGER]',
-    bodyEn: '[TO WRITE]',
-    tools: [],
+    id: 'games',
+    titleFr: 'Jeux vidéo',
+    titleEn: 'Game development',
+    bodyFr:
+      'Développement de jeux, du prototype jouable à la version livrée. Systèmes de gameplay, sensations de contrôle, multijoueur.',
+    bodyEn:
+      'Game development, from playable prototype to shipped build. Gameplay systems, game feel, multiplayer.',
+    tools: ['Unity', 'C#', 'Netcode'],
   },
   {
-    id: 'service-3',
-    titleFr: '[À RÉDIGER — service 3]',
-    titleEn: '[TO WRITE — service 3]',
-    bodyFr: '[À RÉDIGER]',
-    bodyEn: '[TO WRITE]',
-    tools: [],
+    id: 'team',
+    titleFr: 'Renfort d’équipe',
+    titleEn: 'Team reinforcement',
+    bodyFr:
+      'Intégration à une équipe existante, en régie ou en sous-traitance, sur une durée définie. Utile quand il manque une paire de mains expérimentées sur Unity ou sur la partie XR.',
+    bodyEn:
+      'Joining an existing team, on site or as a subcontractor, for a defined period. Useful when a team is short an experienced pair of hands on Unity or on the XR side.',
+    tools: ['Unity', 'Régie', 'Code review'],
   },
 ];
 

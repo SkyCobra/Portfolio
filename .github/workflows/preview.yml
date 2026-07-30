@@ -1,0 +1,57 @@
+# Internal preview on GitHub Pages.
+#
+# This is NOT the production host — the real site will be served from
+# skycobra-studio.com. This deployment exists so the design can be looked at
+# from any device without running a local server.
+#
+# PREVIEW=1 switches astro.config.mjs to the project sub-path and adds a
+# noindex meta tag, so the staging site never competes with the real domain in
+# search results.
+
+name: Preview
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:      # lets you redeploy by hand from the Actions tab
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# A newer push supersedes a running deploy rather than queueing behind it.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build
+        env:
+          PREVIEW: '1'
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

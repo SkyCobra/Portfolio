@@ -29,6 +29,19 @@ const ogImage = new URL(`${base}og.jpg`, Astro.site ?? `https://${SITE.domain}`)
 const ogLocale = lang === 'fr' ? 'fr_FR' : 'en_US';
 const ogLocaleAlt = lang === 'fr' ? 'en_US' : 'fr_FR';
 const skipLabel = lang === 'fr' ? 'Aller au contenu' : 'Skip to content';
+
+// A stylesheet cannot know the deploy base, so the three artwork URLs are
+// injected here instead of being hard-coded with a leading slash. Without this
+// they would 404 on any sub-path deployment.
+const assetStyles = `
+html[data-theme='night']{--bg-image:url('${base}bg-night.webp')}
+html[data-theme='day']{--bg-image:url('${base}bg-day.webp')}
+.lantern .body{background-image:url('${base}lantern.webp')}
+`.trim();
+
+// The staging build must never be indexed — it would compete with the real
+// domain in search results.
+const preview = base !== '/';
 ---
 <!doctype html>
 <html lang={lang} data-theme="night">
@@ -57,6 +70,7 @@ const skipLabel = lang === 'fr' ? 'Aller au contenu' : 'Skip to content';
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
+    {preview && <meta name="robots" content="noindex, nofollow" />}
     <title>{title}</title>
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
@@ -92,15 +106,26 @@ const skipLabel = lang === 'fr' ? 'Aller au contenu' : 'Skip to content';
       href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=IM+Fell+English:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;1,400;1,500;1,600&display=swap"
       rel="stylesheet"
     />
+
+    {/* Base-aware artwork URLs. Last in the head, so they override the
+        placeholder declarations in global.css. */}
+    <style is:inline set:html={assetStyles}></style>
   </head>
   <body>
     <a class="skip-link" href="#main">{skipLabel}</a>
+
+    {/* Dust drifting through the light — three parallax layers, see global.css.
+        Purely decorative, hence hidden from assistive technology. */}
+    <div class="dust" aria-hidden="true"><span></span><span></span><span></span></div>
+
     <Lantern lang={lang} />
     <SiteNav lang={lang} langSwitchHref={langSwitchHref} current={current} />
     <slot />
     <SiteFooter lang={lang} />
 
-    <script is:inline>
+    {/* `define:vars` is what lets an inline script — untouched by the build —
+        receive a value computed at render time. */}
+    <script is:inline define:vars={{ assetBase: base }}>
       (function () {
         var btn = document.querySelector('[data-lantern]');
         if (!btn) return;
@@ -111,7 +136,28 @@ const skipLabel = lang === 'fr' ? 'Aller au contenu' : 'Skip to content';
         }
         syncPressed();
 
+        /* Only the active theme's artwork is preloaded — no point charging a
+           visitor who never flips the lantern. But that left the first flip
+           showing the flat fallback colour while the other image downloaded.
+           So we fetch it quietly once the page is idle: no cost up front, and
+           the switch is instant when it happens. */
+        var prefetched = false;
+        function prefetchOther() {
+          if (prefetched) return;
+          prefetched = true;
+          var other = root.dataset.theme === 'night' ? 'day' : 'night';
+          new Image().src = assetBase + 'bg-' + other + '.webp';
+        }
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(prefetchOther, { timeout: 4000 });
+        } else {
+          setTimeout(prefetchOther, 2000);
+        }
+        btn.addEventListener('pointerenter', prefetchOther);
+        btn.addEventListener('focus', prefetchOther);
+
         btn.addEventListener('click', function () {
+          prefetchOther();
           var next = root.dataset.theme === 'night' ? 'day' : 'night';
           root.dataset.theme = next;
           syncPressed();
